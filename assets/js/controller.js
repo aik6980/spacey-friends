@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example');
+var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO, 'phaser-example');
 
 var PhaserGame = function () {
 
@@ -43,8 +43,8 @@ PhaserGame.prototype = {
 
         this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
 
-        this.stick = this.pad.addStick(0, 0, 200, 'arcade');
-        this.stick.alignBottomLeft();
+        this.stick = this.pad.addStick(200, 150, 200, 'arcade');
+        // this.stick.alignTopLeft();
         this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
 
         this.buttonA = this.pad.addButton(500, 520, 'arcade', 'button1-up', 'button1-down');
