@@ -10,6 +10,10 @@ app.get('/', function(req, res){
     res.render('index.jade');
 });
 
+app.get('/controller', function(req, res){
+    res.render('controller.jade');
+});
+
 var port = process.env.PORT || 3000;
 
 var server = app.listen(port, function () {
