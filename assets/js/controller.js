@@ -47,13 +47,15 @@ PhaserGame.prototype = {
         // this.stick.alignTopLeft();
         this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
 
-        this.buttonA = this.pad.addButton(500, 520, 'arcade', 'button1-up', 'button1-down');
+        var buttonXBase = 400;
+        var buttonYBase = 150;
+        this.buttonA = this.pad.addButton(buttonXBase, buttonYBase, 'arcade', 'button1-up', 'button1-down');
         this.buttonA.onDown.add(this.pressButtonA, this);
 
-        this.buttonB = this.pad.addButton(615, 450, 'arcade', 'button2-up', 'button2-down');
+        this.buttonB = this.pad.addButton(buttonXBase + 115, buttonYBase - 70, 'arcade', 'button2-up', 'button2-down');
         this.buttonB.onDown.add(this.pressButtonB, this);
 
-        this.buttonC = this.pad.addButton(730, 520, 'arcade', 'button3-up', 'button3-down');
+        this.buttonC = this.pad.addButton(buttonXBase + 230, buttonYBase, 'arcade', 'button3-up', 'button3-down');
         this.buttonC.onDown.add(this.pressButtonC, this);
 
     },
