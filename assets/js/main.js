@@ -23,7 +23,6 @@ var GameState = {
         this.ship = this.game.add.sprite(250, 250, 'ship');
         this.ship.anchor.setTo(0.5);
         this.ship.scale.setTo(0.03);
-        this.ship.direction = 0;
         game.physics.arcade.enable(this.ship);
 
         // Ship Rotation
@@ -33,7 +32,8 @@ var GameState = {
 
         // Ship Movement
         this.ship.body.drag.set(10);
-        this.ship.body.maxVelocity.set(200);
+        this.ship.body.maxVelocity.set(100);
+        this.ship.speed = 100;
 
         // UFO
         this.ufo = this.game.add.sprite(250, 50, 'ufo');
@@ -60,28 +60,13 @@ var GameState = {
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
         {
-            game.physics.arcade.accelerationFromRotation(this.ship.rotation, 100, this.ship.body.acceleration);
+            game.physics.arcade.accelerationFromRotation(this.ship.rotation, this.ship.speed, this.ship.body.acceleration);
         } else {
             this.ship.body.acceleration.set(0);
         }
 
     }
 };
-
-function rotateShipRight() {
-    this.ship.body.angularAcceleration -= 200;
-}
-
-function rotateShipLeft() {
-    this.ship.body.angularAcceleration += 200;
-}
-
-function stopRotateLeft() {
-    if (this.ship.direction < 0) {
-        this.ship.direction = 0;
-    }
-}
-
 
 //Add all states
 game.state.add("GameState", GameState);
