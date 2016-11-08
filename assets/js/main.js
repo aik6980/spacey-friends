@@ -19,36 +19,52 @@ var GameState = {
 
         this.background = this.game.add.sprite(0, 0, 'background');
 
+        // Ship Setup
         this.ship = this.game.add.sprite(250, 250, 'ship');
         this.ship.anchor.setTo(0.5);
         this.ship.scale.setTo(0.03);
-        this.ship.rotationSpeed = 5;
         this.ship.direction = 0;
         game.physics.arcade.enable(this.ship);
-        this.ship.body.allowRotation = true;
-        this.ship.body.maxAngular = 500;
-        this.ship.body.angularDrag = 150;
 
+        // Ship Rotation
+        this.ship.body.allowRotation = true;
+        this.ship.body.maxAngular = 300;
+        this.ship.body.angularDrag = 350;
+
+        // Ship Movement
+        this.ship.body.drag.set(10);
+        this.ship.body.maxVelocity.set(200);
+
+        // UFO
         this.ufo = this.game.add.sprite(250, 50, 'ufo');
         this.ufo.anchor.setTo(0.5);
         this.ufo.scale.setTo(0.1);
+
+
+        // DUBUGGING
+        // this.text = this.game.add.text(10, 10, 'here is a colored line of text',  { font: "32px Arial", fill: '#FF0000' });
     },
     update: function () {
-        this.ship.angle += this.ship.direction * this.ship.rotationSpeed;
 
         //  Reset the acceleration
         this.ship.body.angularAcceleration = 0;
         //  Apply acceleration if the left/right arrow keys are held down
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            this.ship.body.angularAcceleration -= 200;
+            this.ship.body.angularAcceleration -= 600;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            this.ship.body.angularAcceleration += 200;
+            this.ship.body.angularAcceleration += 600;
         }
 
-        game.physics.arcade.velocityFromAngle(this.ship.angle, 10, this.ship.body.velocity)
+        if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+        {
+            game.physics.arcade.accelerationFromRotation(this.ship.rotation, 100, this.ship.body.acceleration);
+        } else {
+            this.ship.body.acceleration.set(0);
+        }
+
     }
 };
 
