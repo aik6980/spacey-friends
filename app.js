@@ -5,6 +5,7 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 var players = [];
+var games = [];
 
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/assets/views');
@@ -16,7 +17,11 @@ app.get('/', function(req, res){
 });
 
 app.get('/controller', function(req, res){
-    res.render('controller.jade');
+    if (players.length > 2) {
+        res.send("Too many controllers already connected");
+    } else {
+        res.render('controller.jade');
+    }
 });
 
 var port = process.env.PORT || 3000;
@@ -29,8 +34,15 @@ var server = server.listen(port, function () {
 });
 
 io.on('connection', function (socket) {
-    players.push(socket);
-    console.log(socket.id, "connected.", players.length, "connections.");
+    if (socket.handshake.headers.referer.endsWith("controller")) {
+        players.push(socket);
+        console.log("Controller connected");
+        console.log(socket.id, "connected.", players.length, "connections.");
+    } else {
+        games.push(socket);
+        console.log("Game connected");
+    }
+
     socket.on('controller', function (data) {
         io.sockets.emit('instruction', data);
     });
