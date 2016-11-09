@@ -4,6 +4,8 @@ var app = express();
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
+var players = [];
+
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/assets/views');
 
@@ -27,7 +29,14 @@ var server = server.listen(port, function () {
 });
 
 io.on('connection', function (socket) {
+    players.push(socket);
+    console.log(socket.id, "connected.", players.length, "connections.");
     socket.on('controller', function (data) {
         io.sockets.emit('instruction', data);
+    });
+
+    socket.on('disconnect', function() {
+        players.splice(players.indexOf(socket), 1);
+        console.log("Clients connected:", players.length)
     });
 });
