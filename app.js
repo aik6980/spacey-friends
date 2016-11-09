@@ -27,8 +27,7 @@ var server = server.listen(port, function () {
 });
 
 io.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-        console.log(data);
+    socket.on('controller', function (data) {
+        io.sockets.emit('instruction', data);
     });
 });

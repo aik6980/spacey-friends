@@ -1,5 +1,7 @@
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 
+var controllerInput;
+
 var GameState = {
     preload: function () {
         this.load.image('background', 'assets/game_assets/images/background.jpg');
@@ -51,11 +53,11 @@ var GameState = {
         //  Apply acceleration if the left/right arrow keys are held down
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-            this.ship.body.angularAcceleration -= 600;
+            this.ship.body.angularAcceleration -= 300;
         }
         else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
-            this.ship.body.angularAcceleration += 600;
+            this.ship.body.angularAcceleration += 300;
         }
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
@@ -65,6 +67,7 @@ var GameState = {
             this.ship.body.acceleration.set(0);
         }
 
+        this.ship.body.angularAcceleration += 300 * controllerInput;
     }
 };
 
@@ -75,7 +78,7 @@ game.state.add("GameState", GameState);
 game.state.start("GameState");
 
 var socket = io.connect();
-socket.on('news', function (data) {
-    console.log(data);
-    socket.emit('my other event', { my: 'data' });
+
+socket.on('instruction', function (data) {
+    controllerInput = data.turn;
 });

@@ -76,12 +76,11 @@ PhaserGame.prototype = {
     },
 
     update: function () {
-        if (this.stick.isDown)
-        {
-            console.log(this.stick.forceX);
-        }
+        socket.emit('controller', { turn: this.stick.forceX });
     }
 
 };
 
 game.state.add('Game', PhaserGame, true);
+
+var socket = io.connect();
