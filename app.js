@@ -40,11 +40,13 @@ io.on('connection', function (socket) {
         console.log(socket.id, "connected.", players.length, "connections.");
     } else {
         games.push(socket);
-        console.log("Game connected");
+        console.log("Game connected:", socket.id);
     }
 
     socket.on('controller', function (data) {
-        io.sockets.emit('instruction', data);
+        if (games.length > 0) {
+            games[0].emit('instruction', data);
+        }
     });
 
     socket.on('disconnect', function() {
