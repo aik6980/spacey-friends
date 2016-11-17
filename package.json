@@ -4,6 +4,7 @@
   "description": "Basic boilerplate for Node.js and Pug",
   "main": "app.js",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "jade": "^1.11.0",
     "pug": "^0.1.0",

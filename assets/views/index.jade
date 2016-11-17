@@ -1,3 +1,24 @@
 include includes/base
-script(src="/socket.io/socket.io.js")
-script(src="assets/js/main.js")
+h1 Spacey Friends
+div
+    h2 Use the below form to CREATE a new game using this device as a display
+    form(name="gameName", method="post")
+        input(type="hidden" name="requestingFor" value="newGame")
+        div
+            span.label Game name
+            input(type="text", name="game_name")
+        div
+            input(type="submit", value="START")
+
+div
+    h2 Use the below to JOIN a game
+    form(name="gameName", method="post")
+        input(type="hidden" name="requestingFor" value="controller")
+        div
+            span.label Game name
+            input(type="text", name="game_name")
+        div
+            span.label Player name
+            input(type="text", name="player_name")
+        div
+            input(type="submit", value="JOIN")

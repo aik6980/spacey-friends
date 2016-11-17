@@ -79,6 +79,11 @@ game.state.start("GameState");
 
 var socket = io.connect();
 
+socket.emit('gameConnect', {
+    'game_name': game_name
+});
+
 socket.on('instruction', function (data) {
+    console.log(data);
     controllerInput = data.turn;
 });

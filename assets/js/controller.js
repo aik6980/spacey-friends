@@ -76,7 +76,7 @@ PhaserGame.prototype = {
     },
 
     update: function () {
-        socket.emit('controller', { turn: this.stick.forceX });
+        socket.emit('controller', { game_name: game_name, turn: this.stick.forceX });
     }
 
 };
@@ -84,3 +84,8 @@ PhaserGame.prototype = {
 game.state.add('Game', PhaserGame, true);
 
 var socket = io.connect();
+
+socket.emit('controlGame', {
+    'game_name': game_name,
+    'player_name': player_name
+});
