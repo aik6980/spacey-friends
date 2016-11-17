@@ -84,6 +84,5 @@ socket.emit('gameConnect', {
 });
 
 socket.on('instruction', function (data) {
-    console.log(data);
     controllerInput = data.turn;
 });
