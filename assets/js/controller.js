@@ -1,5 +1,8 @@
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO, 'phaser-example');
 
+var rotation;
+var thrust;
+
 var PhaserGame = function () {
 
     this.sprite;
@@ -50,33 +53,27 @@ PhaserGame.prototype = {
         var buttonXBase = 400;
         var buttonYBase = 150;
         this.buttonA = this.pad.addButton(buttonXBase, buttonYBase, 'arcade', 'button1-up', 'button1-down');
-        this.buttonA.onDown.add(this.pressButtonA, this);
 
         this.buttonB = this.pad.addButton(buttonXBase + 115, buttonYBase - 70, 'arcade', 'button2-up', 'button2-down');
-        this.buttonB.onDown.add(this.pressButtonB, this);
 
         this.buttonC = this.pad.addButton(buttonXBase + 230, buttonYBase, 'arcade', 'button3-up', 'button3-down');
-        this.buttonC.onDown.add(this.pressButtonC, this);
-
-    },
-
-    pressButtonA: function () {
-
-        console.log("A PRESSED");
-
-    },
-
-    pressButtonB: function () {
-        console.log("B PRESSED");
-    },
-
-    pressButtonC: function () {
-        console.log("C PRESSED");
 
     },
 
     update: function () {
-        socket.emit('controller', { game_name: game_name, turn: this.stick.forceX });
+        if (this.stick.isDown) {
+            rotation = this.stick.forceX;
+        } else {
+            rotation = 0;
+        }
+
+        if (this.buttonA.isDown) {
+            thrust = true;
+        } else {
+            thrust = false;
+        }
+
+        socket.emit('controller', { game_name: game_name, thrust: thrust, rotation: rotation });
     }
 
 };

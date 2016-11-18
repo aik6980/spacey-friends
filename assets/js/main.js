@@ -1,6 +1,7 @@
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 
-var controllerInput;
+var rotation;
+var thrust;
 
 var GameState = {
     preload: function () {
@@ -67,7 +68,13 @@ var GameState = {
             this.ship.body.acceleration.set(0);
         }
 
-        this.ship.body.angularAcceleration += 300 * controllerInput;
+        if (thrust) {
+            game.physics.arcade.accelerationFromRotation(this.ship.rotation, this.ship.speed, this.ship.body.acceleration);
+        } else {
+            this.ship.body.acceleration.set(0);
+        }
+
+        this.ship.body.angularAcceleration += 300 * rotation;
     }
 };
 
@@ -84,5 +91,6 @@ socket.emit('gameConnect', {
 });
 
 socket.on('instruction', function (data) {
-    controllerInput = data.turn;
+    rotation = data.rotation;
+    thrust = data.thrust;
 });
