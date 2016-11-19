@@ -1,5 +1,7 @@
 include includes/base
 h1 Spacey Friends
+if error
+    h3(style="color: red;") #{error}
 div
     h2 Use the below form to CREATE a new game using this device as a display
     form(name="gameName", method="post")

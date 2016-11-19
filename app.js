@@ -19,6 +19,9 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function(req, res) {
+    var game_name = req.body.game_name;
+    var player_name = req.body.player_name;
+
     if (req.body.requestingFor === "newGame") {
         console.log(req.body);
         var game = {
@@ -26,15 +29,19 @@ app.post('/', function(req, res) {
             'players': []
         };
         games.push(game);
-        res.render('game.jade', {game_name: req.body.game_name});
+        res.render('game.jade', {game_name: game_name});
 
     } else if (req.body.requestingFor === "controller") {
-        var game_index = searchArrayOfObjectsByProperty("game_name", req.body.game_name, games);
-        var player = {
-            'player_name': req.body.player_name
-        };
-        games[game_index].players.push(player);
-        res.render('controller.jade', {game_name: req.body.game_name, player_name: req.body.player_name});
+        var game_index = searchArrayOfObjectsByProperty("game_name", game_name, games);
+        if (!(game_index)) {
+            res.render('index.jade', {error: "No game named " + game_name});
+        } else {
+            var player = {
+                'player_name': player_name
+            };
+            games[game_index].players.push(player);
+            res.render('controller.jade', {game_name: game_name, player_name: player_name});
+        }
     }
 });
 
@@ -92,4 +99,5 @@ function searchArrayOfObjectsByProperty(propertyToCheck, dataToFind, arrayToSear
     for (var i=0; i < arrayToSearch.length; i++) {
         if (arrayToSearch[i][propertyToCheck] == dataToFind) return i;
     }
+    return false;
 }
