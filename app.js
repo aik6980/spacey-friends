@@ -77,7 +77,9 @@ io.on('connection', function (socket) {
 
     socket.on('controller', function (data) {
         var gameIndex = searchArrayOfObjectsByProperty("game_name", data.game_name, games);
-        if (games.length > 0) {
+        if (!(gameIndex)) {
+            socket.emit('redirect', {location: "home"});
+        } else {
             games[gameIndex].socket.emit('instruction', data);
         }
     });
