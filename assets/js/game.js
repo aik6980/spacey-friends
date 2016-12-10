@@ -5,6 +5,9 @@ var thrust;
 
 var GameState = {
     preload: function () {
+        // tell the game to keep running, even the browser losing focus (so we can test locally)
+        game.stage.disableVisibilityChange = true;
+        
         this.load.image('background', 'assets/game_assets/images/background.jpg');
         this.load.image('ship', 'assets/game_assets/images/ship.png');
         this.load.image('ufo', 'assets/game_assets/images/ufo.png')
@@ -67,7 +70,7 @@ var GameState = {
         } else {
             this.ship.body.acceleration.set(0);
         }
-
+       
         if (thrust) {
             game.physics.arcade.accelerationFromRotation(this.ship.rotation, this.ship.speed, this.ship.body.acceleration);
         } else {
