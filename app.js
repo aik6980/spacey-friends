@@ -36,11 +36,17 @@ app.post('/', function(req, res) {
         if (typeof game_index != "number") {
             res.render('index.jade', {error: "No game named " + game_name});
         } else {
-            var player = {
-                'player_name': player_name
-            };
-            games[game_index].players.push(player);
-            res.render('controller.jade', {game_name: game_name, player_name: player_name});
+
+            var name_index = searchArrayOfObjectsByProperty("player_name", player_name, games[game_index].players);
+            if (typeof name_index === "number") {
+                res.render('index.jade', {error: "Name already in use!"});
+            } else {
+                var player = {
+                    'player_name': player_name
+                };
+                games[game_index].players.push(player);
+                res.render('controller.jade', {game_name: game_name, player_name: player_name});
+            }
         }
     }
 });
