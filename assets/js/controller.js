@@ -73,7 +73,7 @@ PhaserGame.prototype = {
             thrust = false;
         }
 
-        socket.emit('controller', { game_name: game_name, thrust: thrust, rotation: rotation });
+        socket.emit('controller', { game_name: game_name, thrust: thrust, rotation: rotation, player_name: player_name });
     }
 
 };

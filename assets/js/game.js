@@ -1,8 +1,5 @@
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 
-var rotation;
-var thrust;
-
 var GameState = {
     preload: function () {
         // tell the game to keep running, even the browser losing focus (so we can test locally)
@@ -57,16 +54,14 @@ var GameState = {
                 ship.body.acceleration.set(0);
             }
 
-            if (thrust) {
+            if (ship.thrust) {
                 game.physics.arcade.accelerationFromRotation(ship.rotation, ship.speed, ship.body.acceleration);
             } else {
                 ship.body.acceleration.set(0);
             }
 
-            ship.body.angularAcceleration += 300 * rotation;
+            ship.body.angularAcceleration += 300 * ship.rotation;
         }
-        //  Reset the acceleration
-
     },
     createShip : function (ship_name) {
         // Ship Setup
@@ -74,6 +69,8 @@ var GameState = {
         ship.shipName = ship_name;
         ship.anchor.setTo(0.5);
         ship.scale.setTo(0.03);
+        ship.rotation = null;
+        ship.thrust = null;
         game.physics.arcade.enable(ship);
 
         // Ship Rotation
@@ -103,10 +100,23 @@ socket.emit('gameConnect', {
 });
 
 socket.on('instruction', function (data) {
-    rotation = data.rotation;
-    thrust = data.thrust;
+    var shipIndex = searchArrayOfObjectsByProperty("shipName",data.player_name, GameState.ships);
+    if (typeof shipIndex === "number") {
+        GameState.ships[shipIndex].rotation = data.rotation;
+        GameState.ships[shipIndex].thrust = data.thrust;
+    } else {
+        console.log("the name " + data.player_name + " does not exist :(")
+    }
+
 });
 
 socket.on('newShip', function (data) {
     GameState.createShip(data.player_name);
 });
+
+function searchArrayOfObjectsByProperty(propertyToCheck, dataToFind, arrayToSearch) {
+    for (var i=0; i < arrayToSearch.length; i++) {
+        if (arrayToSearch[i][propertyToCheck] == dataToFind) return i;
+    }
+    return false;
+}
