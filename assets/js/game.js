@@ -25,59 +25,68 @@ var GameState = {
 
         this.background = this.game.add.sprite(0, 0, 'background');
 
-        // Ship Setup
-        this.ship = this.game.add.sprite(250, 250, 'ship');
-        this.ship.anchor.setTo(0.5);
-        this.ship.scale.setTo(0.03);
-        game.physics.arcade.enable(this.ship);
-
-        // Ship Rotation
-        this.ship.body.allowRotation = true;
-        this.ship.body.maxAngular = 300;
-        this.ship.body.angularDrag = 350;
-
-        // Ship Movement
-        this.ship.body.drag.set(10);
-        this.ship.body.maxVelocity.set(100);
-        this.ship.speed = 100;
-
         // UFO
         this.ufo = this.game.add.sprite(250, 50, 'ufo');
         this.ufo.anchor.setTo(0.5);
         this.ufo.scale.setTo(0.1);
 
+        this.ships = [];
 
         // DUBUGGING
         // this.text = this.game.add.text(10, 10, 'here is a colored line of text',  { font: "32px Arial", fill: '#FF0000' });
     },
     update: function () {
 
+        for (var i in this.ships) {
+            var ship = this.ships[i];
+            ship.body.angularAcceleration = 0;
+            //  Apply acceleration if the left/right arrow keys are held down
+            if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+            {
+                ship.body.angularAcceleration -= 300;
+            }
+            else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+            {
+                ship.body.angularAcceleration += 300;
+            }
+
+            if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
+            {
+                game.physics.arcade.accelerationFromRotation(ship.rotation, ship.speed, ship.body.acceleration);
+            } else {
+                ship.body.acceleration.set(0);
+            }
+
+            if (thrust) {
+                game.physics.arcade.accelerationFromRotation(ship.rotation, ship.speed, ship.body.acceleration);
+            } else {
+                ship.body.acceleration.set(0);
+            }
+
+            ship.body.angularAcceleration += 300 * rotation;
+        }
         //  Reset the acceleration
-        this.ship.body.angularAcceleration = 0;
-        //  Apply acceleration if the left/right arrow keys are held down
-        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-        {
-            this.ship.body.angularAcceleration -= 300;
-        }
-        else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-        {
-            this.ship.body.angularAcceleration += 300;
-        }
 
-        if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
-        {
-            game.physics.arcade.accelerationFromRotation(this.ship.rotation, this.ship.speed, this.ship.body.acceleration);
-        } else {
-            this.ship.body.acceleration.set(0);
-        }
-       
-        if (thrust) {
-            game.physics.arcade.accelerationFromRotation(this.ship.rotation, this.ship.speed, this.ship.body.acceleration);
-        } else {
-            this.ship.body.acceleration.set(0);
-        }
+    },
+    createShip : function (ship_name) {
+        // Ship Setup
+        var ship = this.game.add.sprite(250, 250, 'ship');
+        ship.shipName = ship_name;
+        ship.anchor.setTo(0.5);
+        ship.scale.setTo(0.03);
+        game.physics.arcade.enable(ship);
 
-        this.ship.body.angularAcceleration += 300 * rotation;
+        // Ship Rotation
+        ship.body.allowRotation = true;
+        ship.body.maxAngular = 300;
+        ship.body.angularDrag = 350;
+
+        // Ship Movement
+        ship.body.drag.set(10);
+        ship.body.maxVelocity.set(100);
+        ship.speed = 100;
+
+        this.ships.push(ship);
     }
 };
 
@@ -96,4 +105,8 @@ socket.emit('gameConnect', {
 socket.on('instruction', function (data) {
     rotation = data.rotation;
     thrust = data.thrust;
+});
+
+socket.on('newShip', function (data) {
+    GameState.createShip(data.player_name);
 });

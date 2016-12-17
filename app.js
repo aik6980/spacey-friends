@@ -79,6 +79,7 @@ io.on('connection', function (socket) {
         var gameIndex = searchArrayOfObjectsByProperty("game_name", data.game_name, games);
         var playerIndex = searchArrayOfObjectsByProperty("player_name", data.player_name, games[gameIndex].players);
         games[gameIndex].players[playerIndex].socket = socket;
+        games[gameIndex].socket.emit('newShip', {player_name: data.player_name});
     });
 
     socket.on('controller', function (data) {
