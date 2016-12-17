@@ -33,7 +33,7 @@ app.post('/', function(req, res) {
 
     } else if (req.body.requestingFor === "controller") {
         var game_index = searchArrayOfObjectsByProperty("game_name", game_name, games);
-        if (!(game_index)) {
+        if (typeof game_index != "number") {
             res.render('index.jade', {error: "No game named " + game_name});
         } else {
             var player = {
@@ -77,7 +77,7 @@ io.on('connection', function (socket) {
 
     socket.on('controller', function (data) {
         var gameIndex = searchArrayOfObjectsByProperty("game_name", data.game_name, games);
-        if (!(gameIndex)) {
+        if (typeof gameIndex != "number") {
             socket.emit('redirect', {location: "home"});
         } else {
             games[gameIndex].socket.volatile.emit('instruction', data);
