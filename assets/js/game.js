@@ -60,7 +60,8 @@ var GameState = {
                 ship.body.acceleration.set(0);
             }
 
-            ship.body.angularAcceleration += 300 * ship.rotation;
+			ship.body.angularAcceleration += 300 * ship.angular_accel_amount;				
+			//console.log(ship.body.angularVelocity);
         }
     },
     createShip : function (ship_name) {
@@ -69,20 +70,21 @@ var GameState = {
         ship.shipName = ship_name;
         ship.anchor.setTo(0.5);
         ship.scale.setTo(0.03);
-        ship.rotation = null;
+        ship.angular_accel_amount = 0.0;
         ship.thrust = null;
         game.physics.arcade.enable(ship);
 
         // Ship Rotation
         ship.body.allowRotation = true;
-        ship.body.maxAngular = 300;
+        //ship.body.maxAngular = 300;
         ship.body.angularDrag = 350;
 
         // Ship Movement
         ship.body.drag.set(10);
         ship.body.maxVelocity.set(100);
         ship.speed = 100;
-
+		
+		ship.body.enable = true;
         this.ships.push(ship);
     }
 };
@@ -102,7 +104,7 @@ socket.emit('gameConnect', {
 socket.on('instruction', function (data) {
     var shipIndex = searchArrayOfObjectsByProperty("shipName",data.player_name, GameState.ships);
     if (typeof shipIndex === "number") {
-        GameState.ships[shipIndex].rotation = data.rotation;
+        GameState.ships[shipIndex].angular_accel_amount = data.rotation;
         GameState.ships[shipIndex].thrust = data.thrust;
     } else {
         console.log("the name " + data.player_name + " does not exist :(")

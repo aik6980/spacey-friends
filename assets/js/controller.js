@@ -27,7 +27,10 @@ PhaserGame.prototype = {
     },
 
     preload: function () {
-
+		// tell the game to keep running, even the browser losing focus (so we can test locally)
+        game.stage.disableVisibilityChange = true;
+	
+	
         this.load.atlas('arcade', 'assets/game_assets/virtualjoystick/skins/arcade-joystick.png', 'assets/game_assets/virtualjoystick/skins/arcade-joystick.json');
         this.load.image('background', 'assets/game_assets/images/background.jpg');
     },
