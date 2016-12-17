@@ -80,7 +80,7 @@ io.on('connection', function (socket) {
         if (!(gameIndex)) {
             socket.emit('redirect', {location: "home"});
         } else {
-            games[gameIndex].socket.emit('instruction', data);
+            games[gameIndex].socket.volatile.emit('instruction', data);
         }
     });
 
