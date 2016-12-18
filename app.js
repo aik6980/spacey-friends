@@ -18,8 +18,13 @@ app.get('/', function(req, res) {
 });
 
 app.post('/', function(req, res) {
-    var game_name = req.body.game_name;
-    var player_name = req.body.player_name;
+    if (req.body.game_name) {
+        var game_name = req.body.game_name.trim().toLowerCase();
+    }
+
+    if (req.body.player_name) {
+        var player_name = req.body.player_name.trim().toLowerCase();
+    }
 
     if (req.body.requestingFor === "newGame") {
         console.log(req.body);
@@ -56,7 +61,6 @@ var server = server.listen(port, function () {
 
 io.on('connection', function (socket) {
     socket.on('gameConnect', function (data) {
-        // Object.defineProperty(games[data.game_name], "socket", socket);
         games[data.game_name].socket = socket;
     });
 
