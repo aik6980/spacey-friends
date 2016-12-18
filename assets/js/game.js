@@ -1,3 +1,36 @@
+/// Asteroid prototype
+var Asteroid = function(game, x, y){
+	
+	Phaser.Sprite.call(this, game, x, y, 'atlas');
+	this.anchor.setTo(0.5);
+}
+
+Asteroid.prototype = Object.create(Phaser.Sprite.prototype);
+Asteroid.prototype.constructor = Asteroid;
+
+Asteroid.prototype.update = function()
+{
+	this.angle += 1;
+}
+/// ---
+
+/// Asteroids Manager
+var AsteroidManager = function(game){
+	this.game = game;
+	this.asteroid_group = game.add.group();
+}
+
+AsteroidManager.prototype.constructor = AsteroidManager;
+
+AsteroidManager.prototype.create_asteroid = function(x, y, id)
+{
+	var asteroid = new Asteroid(this.game, x, y);
+	asteroid.frameName = "asteroid" + id;
+	
+	this.asteroid_group.add(asteroid);
+}
+/// ---
+
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 
 var GameState = {
@@ -8,6 +41,8 @@ var GameState = {
         this.load.image('background', 'assets/game_assets/images/background.jpg');
         this.load.image('ship', 'assets/game_assets/images/ship.png');
         this.load.image('ufo', 'assets/game_assets/images/ufo.png')
+		
+		this.load.atlas('atlas', 'assets/game_assets/images/asteroids.png', 'assets/game_assets/images/asteroids.json');
     },
     create: function () {
         game.input.keyboard.addKeyCapture([
@@ -28,7 +63,13 @@ var GameState = {
         this.ufo.scale.setTo(0.1);
 
         this.ships = [];
-
+		
+		this.asteroid_manager = new AsteroidManager(this);
+		this.create_asteroid(400,400,3);
+		this.create_asteroid(400,150,2);
+		this.create_asteroid(100,150,1);
+		this.create_asteroid(100,400,0);
+		
         // DUBUGGING
         // this.text = this.game.add.text(10, 10, 'here is a colored line of text',  { font: "32px Arial", fill: '#FF0000' });
     },
@@ -86,7 +127,11 @@ var GameState = {
 		
 		ship.body.enable = true;
         this.ships.push(ship);
-    }
+    },
+	
+	create_asteroid : function(x, y, id) {
+		this.asteroid_manager.create_asteroid(x,y,id);
+	}
 };
 
 //Add all states

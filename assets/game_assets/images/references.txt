@@ -1,0 +1,2 @@
+- asteroids.png
+https://raw.githubusercontent.com/wiki/GarageGames/Torque2D/Getting_Started_images/asteroids.png
