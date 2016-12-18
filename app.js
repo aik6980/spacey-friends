@@ -66,7 +66,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('controller', function (data) {
-        if (!(games.hasOwnProperty(data.game_name))) {
+        if ( !(games.hasOwnProperty(data.game_name)) || !(games[data.game_name].hasOwnProperty("socket")) ) {
             socket.emit('redirect', {location: "home"});
         } else {
             games[data.game_name].socket.volatile.emit('instruction', data);
