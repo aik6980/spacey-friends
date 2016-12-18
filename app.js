@@ -5,8 +5,7 @@ var bodyParser = require('body-parser');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
-var players = [];
-var games = [];
+var games = {};
 
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/assets/views');
@@ -28,23 +27,18 @@ app.post('/', function(req, res) {
             'game_name': req.body.game_name,
             'players': []
         };
-        games.push(game);
+        games[game_name] = {players: {}};
         res.render('game.jade', {game_name: game_name});
 
     } else if (req.body.requestingFor === "controller") {
-        var game_index = searchArrayOfObjectsByProperty("game_name", game_name, games);
-        if (typeof game_index != "number") {
+        if (!(games.hasOwnProperty(game_name))) {
             res.render('index.jade', {error: "No game named " + game_name});
         } else {
-
-            var name_index = searchArrayOfObjectsByProperty("player_name", player_name, games[game_index].players);
-            if (typeof name_index === "number") {
+            if (games[game_name].players.hasOwnProperty(player_name)) {
                 res.render('index.jade', {error: "Name already in use!"});
             } else {
-                var player = {
-                    'player_name': player_name
-                };
-                games[game_index].players.push(player);
+
+                games[game_name].players[player_name] = {};
                 res.render('controller.jade', {game_name: game_name, player_name: player_name});
             }
         }
@@ -61,52 +55,25 @@ var server = server.listen(port, function () {
 });
 
 io.on('connection', function (socket) {
-    if (socket.handshake.headers.referer.endsWith("controller")) {
-        players.push(socket);
-        console.log("Controller connected");
-        console.log(socket.id, "connected.", players.length, "connections.");
-    } else {
-        games.push(socket);
-        console.log("Game connected:", socket.id);
-    }
-
     socket.on('gameConnect', function (data) {
-        var gameIndex = searchArrayOfObjectsByProperty("game_name", data.game_name, games);
-        games[gameIndex].socket = socket;
+        // Object.defineProperty(games[data.game_name], "socket", socket);
+        games[data.game_name].socket = socket;
     });
 
     socket.on('controlGame', function (data) {
-        var gameIndex = searchArrayOfObjectsByProperty("game_name", data.game_name, games);
-        var playerIndex = searchArrayOfObjectsByProperty("player_name", data.player_name, games[gameIndex].players);
-        games[gameIndex].players[playerIndex].socket = socket;
-        games[gameIndex].socket.emit('newShip', {player_name: data.player_name});
+        games[data.game_name].players[data.player_name].socket = socket;
+        games[data.game_name].socket.emit('newShip', {player_name: data.player_name});
     });
 
     socket.on('controller', function (data) {
-        var gameIndex = searchArrayOfObjectsByProperty("game_name", data.game_name, games);
-        if (typeof gameIndex != "number") {
+        if (!(games.hasOwnProperty(data.game_name))) {
             socket.emit('redirect', {location: "home"});
         } else {
-            games[gameIndex].socket.volatile.emit('instruction', data);
+            games[data.game_name].socket.volatile.emit('instruction', data);
         }
     });
 
     socket.on('disconnect', function() {
-        players.splice(players.indexOf(socket), 1);
-        console.log("Clients connected:", players.length)
+        console.log("Client disconnected")
     });
 });
-
-/**
- * Searches an array of objects for a property within the objects
- *
- * @param {String} propertyToCheck The property that you are looking to match to.
- * @param {String} dataToFind The value to search for within the supplied property.
- * @param {Array} arrayToSearch Name of the array to search.
- */
-function searchArrayOfObjectsByProperty(propertyToCheck, dataToFind, arrayToSearch) {
-    for (var i=0; i < arrayToSearch.length; i++) {
-        if (arrayToSearch[i][propertyToCheck] == dataToFind) return i;
-    }
-    return false;
-}
