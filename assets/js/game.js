@@ -151,6 +151,7 @@ socket.on('instruction', function (data) {
     if (typeof shipIndex === "number") {
         GameState.ships[shipIndex].angular_accel_amount = data.rotation;
         GameState.ships[shipIndex].thrust = data.thrust;
+        console.log(data.thrust);
     } else {
         console.log("the name " + data.player_name + " does not exist :(")
     }
