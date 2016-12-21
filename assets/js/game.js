@@ -3,7 +3,7 @@ var Asteroid = function(game, x, y){
 	
 	Phaser.Sprite.call(this, game, x, y, 'atlas');
 	this.anchor.setTo(0.5);
-}
+};
 
 Asteroid.prototype = Object.create(Phaser.Sprite.prototype);
 Asteroid.prototype.constructor = Asteroid;
@@ -11,14 +11,14 @@ Asteroid.prototype.constructor = Asteroid;
 Asteroid.prototype.update = function()
 {
 	this.angle += 1;
-}
+};
 /// ---
 
 /// Asteroids Manager
 var AsteroidManager = function(game){
 	this.game = game;
 	this.asteroid_group = game.add.group();
-}
+};
 
 AsteroidManager.prototype.constructor = AsteroidManager;
 
@@ -28,7 +28,7 @@ AsteroidManager.prototype.create_asteroid = function(x, y, id)
 	asteroid.frameName = "asteroid" + id;
 	
 	this.asteroid_group.add(asteroid);
-}
+};
 /// ---
 
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
