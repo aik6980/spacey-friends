@@ -1,4 +1,3 @@
-/// Asteroid prototype
 class Asteroid extends Phaser.Sprite {
     constructor(game, x, y) {
         super(game, x, y, 'atlas');
@@ -14,22 +13,19 @@ class Asteroid extends Phaser.Sprite {
     }
 }
 
-/// Asteroids Manager
-var AsteroidManager = function(game){
-	this.game = game;
-	this.asteroid_group = game.add.group();
-};
+class AsteroidManager {
+    constructor (game) {
+        this.game = game;
+        this.asteroid_group = game.add.group()
+    }
 
-AsteroidManager.prototype.constructor = AsteroidManager;
+    create_asteroid(x, y, id) {
+        let asteroid = new Asteroid(this.game, x, y);
+        asteroid.frameName = "asteroid" + id;
 
-AsteroidManager.prototype.create_asteroid = function(x, y, id)
-{
-	var asteroid = new Asteroid(this.game, x, y);
-	asteroid.frameName = "asteroid" + id;
-	
-	this.asteroid_group.add(asteroid);
-};
-/// ---
+        this.asteroid_group.add(asteroid);
+    }
+}
 
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 
