@@ -8,7 +8,7 @@ var io = require('socket.io').listen(server);
 var games = {};
 
 app.set('view engine', 'jade');
-app.set('views', __dirname + '/assets/views');
+app.set('views', __dirname + '/views');
 
 app.use(bodyParser());
 app.use('/assets', express.static(__dirname + '/assets'));
