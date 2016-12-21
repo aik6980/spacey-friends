@@ -8,10 +8,10 @@ var io = require('socket.io').listen(server);
 var games = {};
 
 app.set('view engine', 'jade');
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/assets/views');
 
 app.use(bodyParser());
-app.use('/assets', express.static(__dirname + '/assets'));
+app.use('/public', express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {
     res.render('index.jade');

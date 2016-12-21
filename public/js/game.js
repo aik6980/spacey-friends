@@ -38,11 +38,11 @@ var GameState = {
         // tell the game to keep running, even the browser losing focus (so we can test locally)
         game.stage.disableVisibilityChange = true;
         
-        this.load.image('background', 'assets/game_assets/images/background.jpg');
-        this.load.image('ship', 'assets/game_assets/images/ship.png');
-        this.load.image('ufo', 'assets/game_assets/images/ufo.png')
+        this.load.image('background', 'public/game_assets/images/background.jpg');
+        this.load.image('ship', 'public/game_assets/images/ship.png');
+        this.load.image('ufo', 'public/game_assets/images/ufo.png')
 		
-		this.load.atlas('atlas', 'assets/game_assets/images/asteroids.png', 'assets/game_assets/images/asteroids.json');
+		this.load.atlas('atlas', 'public/game_assets/images/asteroids.png', 'public/game_assets/images/asteroids.json');
     },
     create: function () {
         game.input.keyboard.addKeyCapture([
