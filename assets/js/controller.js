@@ -3,39 +3,29 @@ var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.i
 var rotation;
 var thrust;
 
-var PhaserGame = function () {
+class PhaserGame {
+    constructor() {
+        this.sprite;
+        this.pad;
+        this.stick;
+        this.buttonA;
+        this.buttonB;
+        this.buttonC;
+    }
 
-    this.sprite;
-
-    this.pad;
-
-    this.stick;
-
-    this.buttonA;
-    this.buttonB;
-    this.buttonC;
-
-};
-
-PhaserGame.prototype = {
-
-    init: function () {
-
+    init() {
         this.game.renderer.renderSession.roundPixels = true;
         this.physics.startSystem(Phaser.Physics.ARCADE);
+    }
 
-    },
-
-    preload: function () {
-		// tell the game to keep running, even the browser losing focus (so we can test locally)
+    preload() {
+        // tell the game to keep running, even the browser losing focus (so we can test locally)
         game.stage.disableVisibilityChange = true;
-	
-	
         this.load.atlas('arcade', 'public/game_assets/virtualjoystick/skins/arcade-joystick.png', 'public/game_assets/virtualjoystick/skins/arcade-joystick.json');
         this.load.image('background', 'public/game_assets/images/background.jpg');
-    },
+    }
 
-    create: function () {
+    create() {
         game.input.keyboard.addKeyCapture([
             Phaser.Keyboard.LEFT,
             Phaser.Keyboard.RIGHT,
@@ -60,10 +50,9 @@ PhaserGame.prototype = {
         this.buttonB = this.pad.addButton(buttonXBase + 115, buttonYBase - 70, 'arcade', 'button2-up', 'button2-down');
 
         this.buttonC = this.pad.addButton(buttonXBase + 230, buttonYBase, 'arcade', 'button3-up', 'button3-down');
+    }
 
-    },
-
-    update: function () {
+    update() {
         if (this.stick.isDown) {
             rotation = this.stick.forceX;
         } else {
@@ -76,10 +65,9 @@ PhaserGame.prototype = {
             thrust = false;
         }
 
-        socket.emit('controller', { game_name: game_name, thrust: thrust, rotation: rotation, player_name: player_name });
+        socket.emit('controller', {game_name: game_name, thrust: thrust, rotation: rotation, player_name: player_name});
     }
-
-};
+}
 
 game.state.add('Game', PhaserGame, true);
 
