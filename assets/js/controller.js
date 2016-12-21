@@ -1,8 +1,5 @@
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO, 'phaser-example');
 
-var rotation;
-var thrust;
-
 class PhaserGame {
     constructor() {
         this.sprite;
@@ -11,6 +8,8 @@ class PhaserGame {
         this.buttonA;
         this.buttonB;
         this.buttonC;
+        this.rotation;
+        this.thrust;
     }
 
     init() {
@@ -54,18 +53,18 @@ class PhaserGame {
 
     update() {
         if (this.stick.isDown) {
-            rotation = this.stick.forceX;
+            this.rotation = this.stick.forceX;
         } else {
-            rotation = 0;
+            this.rotation = 0;
         }
 
         if (this.buttonA.isDown) {
-            thrust = true;
+            this.thrust = true;
         } else {
-            thrust = false;
+            this.thrust = false;
         }
 
-        socket.emit('controller', {game_name: game_name, thrust: thrust, rotation: rotation, player_name: player_name});
+        socket.emit('controller', {game_name: game_name, thrust: this.thrust, rotation: this.rotation, player_name: player_name});
     }
 }
 
