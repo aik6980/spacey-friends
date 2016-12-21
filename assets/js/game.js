@@ -1,18 +1,18 @@
 /// Asteroid prototype
-var Asteroid = function(game, x, y){
-	
-	Phaser.Sprite.call(this, game, x, y, 'atlas');
-	this.anchor.setTo(0.5);
-};
+class Asteroid extends Phaser.Sprite {
+    constructor(game, x, y) {
+        super(game, x, y, 'atlas');
+        this.game = game;
+        this.x = x;
+        this.y = y;
 
-Asteroid.prototype = Object.create(Phaser.Sprite.prototype);
-Asteroid.prototype.constructor = Asteroid;
+        this.anchor.setTo(0.5);
+    }
 
-Asteroid.prototype.update = function()
-{
-	this.angle += 1;
-};
-/// ---
+    update() {
+        this.angle += 1;
+    }
+}
 
 /// Asteroids Manager
 var AsteroidManager = function(game){
