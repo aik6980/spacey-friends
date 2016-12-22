@@ -31,8 +31,8 @@ PhaserGame.prototype = {
         game.stage.disableVisibilityChange = true;
 	
 	
-        this.load.atlas('arcade', 'assets/game_assets/virtualjoystick/skins/arcade-joystick.png', 'assets/game_assets/virtualjoystick/skins/arcade-joystick.json');
-        this.load.image('background', 'assets/game_assets/images/background.jpg');
+        this.load.atlas('arcade', 'public/game_assets/virtualjoystick/skins/arcade-joystick.png', 'public/game_assets/virtualjoystick/skins/arcade-joystick.json');
+        this.load.image('background', 'public/game_assets/images/background.jpg');
     },
 
     create: function () {

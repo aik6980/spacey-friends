@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /// Asteroid prototype
 var Asteroid = function(game, x, y){
 	
@@ -10,34 +11,45 @@ var Asteroid = function(game, x, y){
 
 Asteroid.prototype = Object.create(Phaser.Sprite.prototype);
 Asteroid.prototype.constructor = Asteroid;
+=======
+class Asteroid extends Phaser.Sprite {
+    constructor(game, x, y) {
+        super(game, x, y, 'atlas');
+        this.game = game;
+        this.x = x;
+        this.y = y;
 
-Asteroid.prototype.update = function()
-{
-	this.angle += 1;
+        this.anchor.setTo(0.5);
+    }
+>>>>>>> 2a4211fa9171439cf66358de94a2192126c8666c
+
+    update() {
+        this.angle += 1;
+    }
 }
+<<<<<<< HEAD
 
 Asteroid.prototype.self_destroy = function()
 {
 	this.kill();
 }
 /// ---
+=======
+>>>>>>> 2a4211fa9171439cf66358de94a2192126c8666c
 
-/// Asteroids Manager
-var AsteroidManager = function(game){
-	this.game = game;
-	this.asteroid_group = game.add.group();
+class AsteroidManager {
+    constructor (game) {
+        this.game = game;
+        this.asteroid_group = game.add.group()
+    }
+
+    create_asteroid(x, y, id) {
+        let asteroid = new Asteroid(this.game, x, y);
+        asteroid.frameName = "asteroid" + id;
+
+        this.asteroid_group.add(asteroid);
+    }
 }
-
-AsteroidManager.prototype.constructor = AsteroidManager;
-
-AsteroidManager.prototype.create_asteroid = function(x, y, id)
-{
-	var asteroid = new Asteroid(this.game, x, y);
-	asteroid.frameName = "asteroid" + id;
-	
-	this.asteroid_group.add(asteroid);
-}
-/// ---
 
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 
@@ -46,11 +58,11 @@ var GameState = {
         // tell the game to keep running, even the browser losing focus (so we can test locally)
         game.stage.disableVisibilityChange = true;
         
-        this.load.image('background', 'assets/game_assets/images/background.jpg');
-        this.load.image('ship', 'assets/game_assets/images/ship.png');
-        this.load.image('ufo', 'assets/game_assets/images/ufo.png')
+        this.load.image('background', 'public/game_assets/images/background.jpg');
+        this.load.image('ship', 'public/game_assets/images/ship.png');
+        this.load.image('ufo', 'public/game_assets/images/ufo.png')
 		
-		this.load.atlas('atlas', 'assets/game_assets/images/asteroids.png', 'assets/game_assets/images/asteroids.json');
+		this.load.atlas('atlas', 'public/game_assets/images/asteroids.png', 'public/game_assets/images/asteroids.json');
     },
     create: function () {
         game.input.keyboard.addKeyCapture([
@@ -159,6 +171,7 @@ socket.on('instruction', function (data) {
     if (typeof shipIndex === "number") {
         GameState.ships[shipIndex].angular_accel_amount = data.rotation;
         GameState.ships[shipIndex].thrust = data.thrust;
+        console.log("thr: " + data.thrust + "  rot: " + data.rotation);
     } else {
         console.log("the name " + data.player_name + " does not exist :(")
     }

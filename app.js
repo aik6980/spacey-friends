@@ -11,15 +11,20 @@ app.set('view engine', 'jade');
 app.set('views', __dirname + '/assets/views');
 
 app.use(bodyParser());
-app.use('/assets', express.static(__dirname + '/assets'));
+app.use('/public', express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {
     res.render('index.jade');
 });
 
 app.post('/', function(req, res) {
-    var game_name = req.body.game_name;
-    var player_name = req.body.player_name;
+    if (req.body.game_name) {
+        var game_name = req.body.game_name.trim().toLowerCase();
+    }
+
+    if (req.body.player_name) {
+        var player_name = req.body.player_name.trim().toLowerCase();
+    }
 
     if (req.body.requestingFor === "newGame") {
         console.log(req.body);
@@ -56,7 +61,6 @@ var server = server.listen(port, function () {
 
 io.on('connection', function (socket) {
     socket.on('gameConnect', function (data) {
-        // Object.defineProperty(games[data.game_name], "socket", socket);
         games[data.game_name].socket = socket;
     });
 
@@ -66,7 +70,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('controller', function (data) {
-        if (!(games.hasOwnProperty(data.game_name))) {
+        if ( !(games.hasOwnProperty(data.game_name)) || !(games[data.game_name].hasOwnProperty("socket")) ) {
             socket.emit('redirect', {location: "home"});
         } else {
             games[data.game_name].socket.volatile.emit('instruction', data);
