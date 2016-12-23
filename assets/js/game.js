@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-/// Asteroid prototype
-var Asteroid = function(game, x, y){
-	
-	Phaser.Sprite.call(this, game, x, y, 'atlas');
-	this.anchor.setTo(0.5);
-	
-	// kill itself after 30 sec
-	game.time.events.add(Phaser.Timer.SECOND * 4, this.self_destroy, this);
-}
-
-Asteroid.prototype = Object.create(Phaser.Sprite.prototype);
-Asteroid.prototype.constructor = Asteroid;
-=======
 class Asteroid extends Phaser.Sprite {
     constructor(game, x, y) {
         super(game, x, y, 'atlas');
@@ -21,21 +7,11 @@ class Asteroid extends Phaser.Sprite {
 
         this.anchor.setTo(0.5);
     }
->>>>>>> 2a4211fa9171439cf66358de94a2192126c8666c
 
     update() {
         this.angle += 1;
     }
 }
-<<<<<<< HEAD
-
-Asteroid.prototype.self_destroy = function()
-{
-	this.kill();
-}
-/// ---
-=======
->>>>>>> 2a4211fa9171439cf66358de94a2192126c8666c
 
 class AsteroidManager {
     constructor (game) {
