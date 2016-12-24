@@ -1,7 +1,12 @@
 var gulp = require("gulp");
-var babel = require("gulp-babel");
+var ts = require("gulp-typescript");
+var tsProject = ts.createProject("tsconfig.json");
 
-gulp.task("default", ['babel', 'js_move']);
+gulp.task("default", ['typescript', 'js_move']);
+
+gulp.task("dev", function () {
+    gulp.watch('assets/js/**/*.*', ['default']);
+});
 
 gulp.task("babel", function () {
     return gulp.src("assets/js/*.js")
@@ -12,4 +17,10 @@ gulp.task("babel", function () {
 gulp.task("js_move", function () {
     return gulp.src("assets/js/vendor/**/*.js")
         .pipe(gulp.dest("public/js/vendor"));
+});
+
+gulp.task("typescript", function () {
+    return tsProject.src()
+        .pipe(tsProject())
+        .js.pipe(gulp.dest("public/js"));
 });
