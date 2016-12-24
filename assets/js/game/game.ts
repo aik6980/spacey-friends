@@ -1,34 +1,4 @@
 
-/*class Asteroid extends Phaser.Sprite {
-    constructor(game : Phaser.Game, x : number, y) {
-        super(game, x, y, 'atlas');
-        this.game = game;
-        this.x = x;
-        this.y = y;
-
-        this.anchor.setTo(0.5);
-    }
-
-    update() {
-        this.angle += 1;
-    }
-}*/
-var t;
-
-class AsteroidManager {
-    constructor (game) {
-        this.game = game;
-        this.asteroid_group = game.add.group()
-    }
-
-    create_asteroid(x, y, id) {
-        let asteroid = new Objects.Asteroid(this.game, x, y);
-        asteroid.frameName = "asteroid" + id;
-
-        this.asteroid_group.add(asteroid);
-    }
-}
-
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
 
 var GameState = {
@@ -62,7 +32,7 @@ var GameState = {
 
         this.ships = [];
 		
-		this.asteroid_manager = new AsteroidManager(this);
+		this.asteroid_manager = new System.AsteroidManager(this);
 		this.create_asteroid(400,400,3);
 		this.create_asteroid(400,150,2);
 		this.create_asteroid(100,150,1);

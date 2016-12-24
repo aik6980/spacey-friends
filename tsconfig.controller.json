@@ -8,6 +8,6 @@
   },
   "include": [
 	"assets/js/controller/**/*",
-	"assets/tsd/**/*"
+	"assets/js/tsd/**/*"
   ]
 }

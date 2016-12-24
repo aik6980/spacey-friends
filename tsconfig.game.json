@@ -8,6 +8,6 @@
   },
   "include": [
 	"assets/js/game/**/*",
-	"assets/tsd/**/*"
+	"assets/js/tsd/**/*"
   ]
 }
