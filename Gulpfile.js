@@ -4,6 +4,10 @@ var tsProject = ts.createProject("tsconfig.json");
 
 gulp.task("default", ['typescript', 'js_move']);
 
+gulp.task("dev", function () {
+    gulp.watch('assets/js/**/*.*', ['default']);
+});
+
 gulp.task("babel", function () {
     return gulp.src("assets/js/*.js")
         .pipe(babel())
