@@ -18,6 +18,11 @@ CD to the repo directory and execute:
 $ npm install
 ```
 
+To compile the files and run the server execute:
+```sh
+$ npm start
+```
+
 For development it is then advised to run the following as a seperate process which will watch the js files and TypeScript files in assets and recompile them if they change ...
 
 ```sh
