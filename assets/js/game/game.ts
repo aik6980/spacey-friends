@@ -1,5 +1,6 @@
-class Asteroid extends Phaser.Sprite {
-    constructor(game, x, y) {
+
+/*class Asteroid extends Phaser.Sprite {
+    constructor(game : Phaser.Game, x : number, y) {
         super(game, x, y, 'atlas');
         this.game = game;
         this.x = x;
@@ -11,7 +12,8 @@ class Asteroid extends Phaser.Sprite {
     update() {
         this.angle += 1;
     }
-}
+}*/
+var t;
 
 class AsteroidManager {
     constructor (game) {
@@ -20,7 +22,7 @@ class AsteroidManager {
     }
 
     create_asteroid(x, y, id) {
-        let asteroid = new Asteroid(this.game, x, y);
+        let asteroid = new Objects.Asteroid(this.game, x, y);
         asteroid.frameName = "asteroid" + id;
 
         this.asteroid_group.add(asteroid);

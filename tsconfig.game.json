@@ -1,0 +1,13 @@
+{
+  "files": [
+    "assets/js/game/game.ts"
+  ],
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "target": "es5"
+  },
+  "include": [
+	"assets/js/game/**/*",
+	"assets/tsd/**/*"
+  ]
+}
