@@ -1,5 +1,9 @@
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO, 'phaser-example');
 
+declare module Phaser {
+    class VirtualJoystick {}
+}
+
 class PhaserGame {
     sprite : Phaser.Sprite;
     activate_weapon = false;

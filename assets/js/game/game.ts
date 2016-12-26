@@ -1,9 +1,15 @@
+class GameState extends Phaser.State {
 
-//var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
-var game = new Phaser.Game(1024, 1024, Phaser.AUTO);
+    // control
+    key_space_bar : Phaser.Key;
 
-var GameState = {
-    preload: function () {
+    // world
+    background : Phaser.Sprite;
+    ships : Array<Objects.Ship>;
+    ufo : Phaser.Sprite;
+    asteroid_manager : Game.AsteroidManager;
+
+    preload() {
         // tell the game to keep running, even the browser losing focus (so we can test locally)
         game.stage.disableVisibilityChange = true;
         
@@ -13,8 +19,9 @@ var GameState = {
         this.load.image('bullet', 'public/game_assets/images/bullet.png');
 		
 		this.load.atlas('atlas', 'public/game_assets/images/asteroids.png', 'public/game_assets/images/asteroids.json');
-    },
-    create: function () {
+    }
+
+    create() {
         game.input.keyboard.addKeyCapture([
             Phaser.Keyboard.LEFT,
             Phaser.Keyboard.RIGHT,
@@ -44,15 +51,10 @@ var GameState = {
          this.key_space_bar.onDown.add(this.begin_spawn_asteroid, this);
 		
         // DUBUGGING
-        // this.text = this.game.add.text(10, 10, 'here is a colored line of text',  { font: "32px Arial", fill: '#FF0000' });
-    },
+        // this.text = this.game.add.text(10, 10, 'here is a colored line of text',  { font: "32px Arial", fill: '#FF0000' });   
+    }
 
-    begin_spawn_asteroid : function() {
-        this.asteroid_manager.begin_spawn_asteroid();
-    },
-
-    update: function () {
-
+    update() {
         for (var i in this.ships) {
             var ship = this.ships[i];
 
@@ -70,13 +72,13 @@ var GameState = {
 
             if (game.input.keyboard.isDown(Phaser.Keyboard.UP))
             {
-                game.physics.arcade.accelerationFromRotation(ship.rotation, ship.speed, ship.body.acceleration);
-            } else {
-                //ship.body.acceleration.set(0);
+                var speed = 100;
+                game.physics.arcade.accelerationFromRotation(ship.rotation, speed, ship.body.acceleration);
             }
 
             if (ship.thrust_amount > 0) {
-                game.physics.arcade.accelerationFromRotation(ship.rotation, ship.speed, ship.body.acceleration);
+                var speed = 100;
+                game.physics.arcade.accelerationFromRotation(ship.rotation, speed, ship.body.acceleration);
             }
 
             if (ship.activate_weapon) ship.weapon.fire();
@@ -90,45 +92,52 @@ var GameState = {
             this.game.physics.arcade.overlap(ship.weapon.bullets, this.asteroid_manager.asteroid_group, 
                 this.on_bullet_hit_asteroid, null, this);
         }
-    },
+    }
 
-    on_bullet_hit_asteroid : function( a : Phaser.Sprite, b : Phaser.Sprite ) {
+    begin_spawn_asteroid() {
+        this.asteroid_manager.begin_spawn_asteroid();
+    }
+
+    on_bullet_hit_asteroid( a : Phaser.Sprite, b : Phaser.Sprite ) {
         a.kill();
         b.kill();
-    },
+    }
 
-    createShip : function (ship_name : string) {
+    createShip(ship_name : string) {
         // Ship Setup
         var ship = new Objects.Ship(this);
         ship.name = ship_name;
         ship.position.set(250,250);
         game.add.existing(ship);
         this.ships.push(ship);
-    },
+    }
 	
-	create_asteroid : function(x : number, y : number, id : number) {
+	create_asteroid(x : number, y : number, id : number) {
 		this.asteroid_manager.create_asteroid(x,y,id);
 	}
-};
+}
 
+//var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO);
+var game = new Phaser.Game(1024, 1024, Phaser.AUTO);
+var game_state = new GameState();
 //Add all states
-game.state.add("GameState", GameState);
-
+game.state.add("GameState", game_state);
 //Start the first state
 game.state.start("GameState");
 
 var socket = io.connect();
 
+declare var game_name : string;
 socket.emit('gameConnect', {
     'game_name': game_name
 });
 
-socket.on('instruction', function (data) {
-    var shipIndex = searchArrayOfObjectsByProperty("name",data.player_name, GameState.ships);
+socket.on('instruction', function (data : any) {
+    var shipIndex = searchArrayOfObjectsByProperty("name",data.player_name, game_state.ships);
     if (typeof shipIndex === "number") {
-        GameState.ships[shipIndex].angular_accel_amount = data.rotation;
-        GameState.ships[shipIndex].thrust_amount = data.thrust;
-        GameState.ships[shipIndex].activate_weapon = data.activate_weapon;
+        game_state.ships[shipIndex].angular_accel_amount = data.rotation;
+        game_state.ships[shipIndex].thrust_amount = data.thrust;
+        game_state.ships[shipIndex].activate_weapon = data.activate_weapon;
         console.log("thr: " + data.thrust + "  rot: " + data.rotation);
     } else {
         console.log("the name " + data.player_name + " does not exist :(")
@@ -137,7 +146,7 @@ socket.on('instruction', function (data) {
 });
 
 socket.on('newShip', function (data : any) {
-    GameState.createShip(data.player_name);
+    game_state.createShip(data.player_name);
 });
 
 function searchArrayOfObjectsByProperty(propertyToCheck : string, dataToFind : string, arrayToSearch : Array<any>) {
