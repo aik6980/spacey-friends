@@ -3,11 +3,12 @@
     "assets/js/game/game.ts"
   ],
   "compilerOptions": {
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "target": "es5"
   },
   "include": [
 	"assets/js/game/**/*",
-	"assets/js/tsd/**/*"
+	"assets/js/tsd/**/*",
+	"assets/js/typings/index.d.ts"
   ]
 }
