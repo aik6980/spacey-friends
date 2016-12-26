@@ -5,11 +5,12 @@ var game = new Phaser.Game(1024, 1024, Phaser.AUTO);
 var GameState = {
     preload: function () {
         // tell the game to keep running, even the browser losing focus (so we can test locally)
-        //game.stage.disableVisibilityChange = true;
+        game.stage.disableVisibilityChange = true;
         
         this.load.image('background', 'public/game_assets/images/background.jpg');
         this.load.image('ship', 'public/game_assets/images/ship.png');
-        this.load.image('ufo', 'public/game_assets/images/ufo.png')
+        this.load.image('ufo', 'public/game_assets/images/ufo.png');
+        this.load.image('bullet', 'public/game_assets/images/bullet.png');
 		
 		this.load.atlas('atlas', 'public/game_assets/images/asteroids.png', 'public/game_assets/images/asteroids.json');
     },
@@ -54,6 +55,8 @@ var GameState = {
 
         for (var i in this.ships) {
             var ship = this.ships[i];
+
+            ship.body.acceleration.set(0);
             ship.body.angularAcceleration = 0;
             //  Apply acceleration if the left/right arrow keys are held down
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
@@ -69,42 +72,37 @@ var GameState = {
             {
                 game.physics.arcade.accelerationFromRotation(ship.rotation, ship.speed, ship.body.acceleration);
             } else {
-                ship.body.acceleration.set(0);
+                //ship.body.acceleration.set(0);
             }
 
-            if (ship.thrust) {
+            if (ship.thrust_amount > 0) {
                 game.physics.arcade.accelerationFromRotation(ship.rotation, ship.speed, ship.body.acceleration);
-            } else {
-                ship.body.acceleration.set(0);
             }
+
+            if (ship.activate_weapon) ship.weapon.fire();
 
 			ship.body.angularAcceleration += 300 * ship.angular_accel_amount;				
 			//console.log(ship.body.angularVelocity);
         }
 
         this.game.physics.arcade.collide(this.asteroid_manager.asteroid_group);
+        for (var ship of this.ships) {
+            this.game.physics.arcade.overlap(ship.weapon.bullets, this.asteroid_manager.asteroid_group, 
+                this.on_bullet_hit_asteroid, null, this);
+        }
     },
+
+    on_bullet_hit_asteroid : function( a : Phaser.Sprite, b : Phaser.Sprite ) {
+        a.kill();
+        b.kill();
+    },
+
     createShip : function (ship_name : string) {
         // Ship Setup
-        var ship = this.game.add.sprite(250, 250, 'ship');
-        ship.shipName = ship_name;
-        ship.anchor.setTo(0.5);
-        ship.scale.setTo(0.03);
-        ship.angular_accel_amount = 0.0;
-        ship.thrust = null;
-        game.physics.arcade.enable(ship);
-
-        // Ship Rotation
-        ship.body.allowRotation = true;
-        //ship.body.maxAngular = 300;
-        ship.body.angularDrag = 350;
-
-        // Ship Movement
-        ship.body.drag.set(10);
-        ship.body.maxVelocity.set(100);
-        ship.speed = 100;
-		
-		ship.body.enable = true;
+        var ship = new Objects.Ship(this);
+        ship.name = ship_name;
+        ship.position.set(250,250);
+        game.add.existing(ship);
         this.ships.push(ship);
     },
 	
@@ -126,10 +124,11 @@ socket.emit('gameConnect', {
 });
 
 socket.on('instruction', function (data) {
-    var shipIndex = searchArrayOfObjectsByProperty("shipName",data.player_name, GameState.ships);
+    var shipIndex = searchArrayOfObjectsByProperty("name",data.player_name, GameState.ships);
     if (typeof shipIndex === "number") {
         GameState.ships[shipIndex].angular_accel_amount = data.rotation;
-        GameState.ships[shipIndex].thrust = data.thrust;
+        GameState.ships[shipIndex].thrust_amount = data.thrust;
+        GameState.ships[shipIndex].activate_weapon = data.activate_weapon;
         console.log("thr: " + data.thrust + "  rot: " + data.rotation);
     } else {
         console.log("the name " + data.player_name + " does not exist :(")

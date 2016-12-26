@@ -2,6 +2,7 @@ var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.i
 
 class PhaserGame {
     sprite : Phaser.Sprite;
+    activate_weapon = false;
 
     constructor() {
         this.sprite;
@@ -12,11 +13,12 @@ class PhaserGame {
         this.buttonC;
         this.rotation;
         this.thrust;
+        this.activate_weapon;
     }
 
     init() {
         this.game.renderer.renderSession.roundPixels = true;
-        this.physics.startSystem(Phaser.Physics.ARCADE);
+        //this.physics.startSystem(Phaser.Physics.ARCADE);
     }
 
     preload() {
@@ -60,13 +62,11 @@ class PhaserGame {
             this.rotation = 0;
         }
 
-        if (this.buttonA.isDown) {
-            this.thrust = true;
-        } else {
-            this.thrust = false;
-        }
+        this.thrust = this.buttonA.isDown;
+        this.activate_weapon = this.buttonB.isDown;
 
-        socket.emit('controller', {game_name: game_name, thrust: this.thrust, rotation: this.rotation, player_name: player_name});
+        socket.emit('controller', {game_name: game_name, thrust: this.thrust, activate_weapon: this.activate_weapon,
+            rotation: this.rotation, player_name: player_name});
     }
 }
 
