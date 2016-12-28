@@ -4,21 +4,15 @@ declare module Phaser {
     class VirtualJoystick {}
 }
 
-class PhaserGame {
+class PhaserGame extends Phaser.State {
     sprite : Phaser.Sprite;
     activate_weapon = false;
-
-    constructor() {
-        this.sprite;
-        this.pad;
-        this.stick;
-        this.buttonA;
-        this.buttonB;
-        this.buttonC;
-        this.rotation;
-        this.thrust;
-        this.activate_weapon;
-    }
+    thrust : boolean;
+    pad : Phaser.VirtualJoystick;
+    stick : Phaser.VirtualJoystick;
+    buttonA : any;
+    buttonB : any;
+    buttonC : any;
 
     init() {
         this.game.renderer.renderSession.roundPixels = true;
