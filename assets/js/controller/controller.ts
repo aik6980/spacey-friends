@@ -1,10 +1,19 @@
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO, 'phaser-example');
 
-declare module Phaser {
+declare namespace Phaser {
     class VirtualJoystick extends Phaser.Plugin {
-        HORIZONTAL : any;
         addStick : any;
         addButton : any;
+    }
+
+    namespace VirtualJoystick {
+        var HORIZONTAL : any;
+        class Stick {
+            motionLock : any;
+            isDown : any;
+            forceX : any;
+        }
+
     }
 }
 
@@ -13,7 +22,7 @@ class PhaserGame extends Phaser.State {
     activate_weapon = false;
     thrust : boolean;
     pad : Phaser.VirtualJoystick;
-    stick : Phaser.VirtualJoystick;
+    stick : Phaser.VirtualJoystick.Stick;
     buttonA : any;
     buttonB : any;
     buttonC : any;
