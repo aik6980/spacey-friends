@@ -1,7 +1,11 @@
 var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO, 'phaser-example');
 
 declare module Phaser {
-    class VirtualJoystick {}
+    class VirtualJoystick extends Phaser.Plugin {
+        HORIZONTAL : any;
+        addStick : any;
+        addButton : any;
+    }
 }
 
 class PhaserGame extends Phaser.State {
