@@ -1,5 +1,7 @@
 /*
-Note: 
+Note:
+ [29/12/2016] "diagnosticLogging" : true
+	- launch.json, if we have problem with Breakpoints or Sourcemaps turn this on for more information (default is false)
  [29/12/2016] ".pipe(sourcemaps.write( ".", { sourceRoot : "../../game"} ))"
 	- "../../game", our sourcemap file is generated next to .js file, 
 	however, we have to set the correct value for sourceRoot so VSCode can find the path of the original cource code (for example "game.ts")
