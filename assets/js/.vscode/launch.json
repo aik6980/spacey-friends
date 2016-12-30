@@ -5,6 +5,7 @@
             "name": "Launch Chrome against localhost, with sourcemaps",
             "type": "chrome",
             "request": "launch",
+            "runtimeArgs" : [ "-user-data-dir=${env.TMP}\\tmp_profile", "--incognito" ],
             "url": "http://localhost:3000",
             "sourceMaps": true,
             "webRoot": "${workspaceRoot}",

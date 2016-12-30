@@ -98,6 +98,28 @@ module Game {
             return asteroid; 
         }
 
+        spawn_small_asteroids( a : Objects.Asteroid ) {
+            // spawn new asteroids
+            let num_spawn = 2;
+        
+            let body : Phaser.Physics.Arcade.Body = a.body;
+            // change velocity of these new asteroids by 45 degrees
+            let init_angle = [45, -45];
+            // new asteroid size;
+            let scale = 0.5; 
+
+            for(let i=0; i<num_spawn; ++i)
+            {
+                var frame_id = this.game.rnd.integerInRange(0, 3);
+                let sm = this.create_asteroid(a.x, a.y, frame_id);
+                game.physics.arcade.enable(sm);
+
+                body.velocity.clone(sm.body.velocity);
+                sm.body.velocity.rotate(0,0,init_angle[i],true);
+                sm.scale.setTo(scale);
+            }
+        }
+
         create_asteroid(x :number, y :number, id : number) : Objects.Asteroid {
             let asteroid = new Objects.Asteroid(this.game, x, y);
             asteroid.frameName = "asteroid" + id;

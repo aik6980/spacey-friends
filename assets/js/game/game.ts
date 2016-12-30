@@ -19,6 +19,7 @@ class GameState extends Phaser.State {
         this.load.image('bullet', 'public/game_assets/images/bullet.png');
 		
 		this.load.atlas('atlas', 'public/game_assets/images/asteroids.png', 'public/game_assets/images/asteroids.json');
+        this.load.spritesheet('big_explosion', 'public/game_assets/images/big_explosion.png', 128, 128);
     }
 
     create() {
@@ -98,9 +99,26 @@ class GameState extends Phaser.State {
         this.asteroid_manager.begin_spawn_asteroid();
     }
 
-    on_bullet_hit_asteroid( a : Phaser.Sprite, b : Phaser.Sprite ) {
+    on_bullet_hit_asteroid( a : Phaser.Sprite, b : Objects.Asteroid ) {
         a.kill();
+        // kill this asteroid
         b.kill();
+        let explosion_scale = 1; 
+        if(b.can_spawn_small_asteroids()){
+            // spawn 2 more
+            this.asteroid_manager.spawn_small_asteroids(b);
+            explosion_scale = 2;
+        }
+        // add explosion vfx
+        this.create_big_explosion_vfx(b, explosion_scale);
+    }
+
+    create_big_explosion_vfx( a : Phaser.Sprite, scale : number ) {
+        let vfx = this.game.add.sprite(a.x, a.y, 'big_explosion');
+        vfx.anchor.setTo(0.5);
+        vfx.scale.setTo(scale);
+        vfx.animations.add('explode');
+        vfx.animations.play('explode', 15, false, true);
     }
 
     createShip(ship_name : string) {
@@ -138,7 +156,6 @@ socket.on('instruction', function (data : any) {
         game_state.ships[shipIndex].angular_accel_amount = data.rotation;
         game_state.ships[shipIndex].thrust_amount = data.thrust;
         game_state.ships[shipIndex].activate_weapon = data.activate_weapon;
-        console.log("thr: " + data.thrust + "  rot: " + data.rotation);
     } else {
         console.log("the name " + data.player_name + " does not exist :(")
     }
