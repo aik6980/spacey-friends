@@ -4,7 +4,9 @@ class GameState extends Phaser.State {
     key_space_bar : Phaser.Key;
 
     // world
-    background : Phaser.Sprite;
+    background : Phaser.TileSprite;
+    base : Phaser.Sprite;
+
     ships : Array<Objects.Ship>;
     ufo : Phaser.Sprite;
     asteroid_manager : Game.AsteroidManager;
@@ -14,6 +16,7 @@ class GameState extends Phaser.State {
         game.stage.disableVisibilityChange = true;
         
         this.load.image('background', 'public/game_assets/images/background.jpg');
+        this.load.image('planet', 'public/game_assets/images/planet.png');
         this.load.image('ship', 'public/game_assets/images/ship.png');
         this.load.image('ufo', 'public/game_assets/images/ufo.png');
         this.load.image('bullet', 'public/game_assets/images/bullet.png');
@@ -34,7 +37,9 @@ class GameState extends Phaser.State {
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        this.background = this.game.add.sprite(0, 0, 'background');
+        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
+        let planet = this.game.add.sprite(this.game.width/2, this.game.height/2, 'planet');
+        planet.anchor.setTo(0.5);
 
         // UFO
         this.ufo = this.game.add.sprite(250, 50, 'ufo');
@@ -125,7 +130,8 @@ class GameState extends Phaser.State {
         // Ship Setup
         var ship = new Objects.Ship(this);
         ship.name = ship_name;
-        ship.position.set(250,250);
+        ship.position.set(this.game.width/2, this.game.height/2 - 100);
+        ship.angle = -90;
         game.add.existing(ship);
         this.ships.push(ship);
     }

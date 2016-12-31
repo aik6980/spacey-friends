@@ -49,7 +49,7 @@ class PhaserGame extends Phaser.State {
         ]);
 
 
-        this.add.image(0, 0, 'background');
+        this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
 
         this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
 
