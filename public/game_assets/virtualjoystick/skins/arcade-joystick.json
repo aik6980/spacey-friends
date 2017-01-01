@@ -10,35 +10,35 @@
 },
 {
 	"filename": "buttonLeft-down",
-	"frame": {"x":575,"y":142,"w":128,"h":128},
+	"frame": {"x":573,"y":140,"w":132,"h":132},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128}
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
+	"sourceSize": {"w":132,"h":132}
 },
 {
 	"filename": "buttonLeft-up",
-	"frame": {"x":575,"y":270,"w":128,"h":128},
+	"frame": {"x":573,"y":268,"w":132,"h":132},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-	"sourceSize": {"w":128,"h":128}
+	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
+	"sourceSize": {"w":132,"h":132}
 },
 {
   "filename": "buttonRight-down",
-  "frame": {"x":703,"y":142,"w":128,"h":128},
+  "frame": {"x":701,"y":140,"w":132,"h":132},
   "rotated": false,
   "trimmed": false,
-  "spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-  "sourceSize": {"w":128,"h":128}
+  "spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
+  "sourceSize": {"w":132,"h":132}
 },
 {
   "filename": "buttonRight-up",
-  "frame": {"x":703,"y":270,"w":128,"h":128},
+  "frame": {"x":701,"y":268,"w":132,"h":132},
   "rotated": false,
   "trimmed": false,
-  "spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
-  "sourceSize": {"w":128,"h":128}
+  "spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
+  "sourceSize": {"w":132,"h":132}
 },
 {
 	"filename": "button1-down",
