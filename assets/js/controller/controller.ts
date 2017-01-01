@@ -26,6 +26,7 @@ class PhaserGame extends Phaser.State {
     buttonA : any;
     buttonB : any;
     buttonLeft : any;
+    buttonRight : any;
 
     init() {
         this.game.renderer.renderSession.roundPixels = true;
@@ -64,14 +65,17 @@ class PhaserGame extends Phaser.State {
 
         this.buttonLeft = this.pad.addButton(80, 200, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
 
-        this.buttonLeft = this.pad.addButton(515, 200, 'arcade', 'buttonRight-up', 'buttonRight-down');
+        this.buttonRight = this.pad.addButton(515, 200, 'arcade', 'buttonRight-up', 'buttonRight-down');
     }
 
     update() {
-        if (this.stick.isDown) {
+
+        this.rotation = 0;
+        if (this.buttonRight.isDown || this.buttonLeft.isDown) {
+            this.rotation += this.buttonRight.isDown;
+            this.rotation -= this.buttonLeft.isDown;
+        } else if (this.stick.isDown) {
             this.rotation = this.stick.forceX;
-        } else {
-            this.rotation = 0;
         }
 
         this.thrust = this.buttonA.isDown;
