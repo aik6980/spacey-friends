@@ -25,7 +25,7 @@ class PhaserGame extends Phaser.State {
     stick : Phaser.VirtualJoystick.Stick;
     buttonA : any;
     buttonB : any;
-    buttonC : any;
+    buttonLeft : any;
 
     init() {
         this.game.renderer.renderSession.roundPixels = true;
@@ -53,17 +53,16 @@ class PhaserGame extends Phaser.State {
 
         this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
 
-        this.stick = this.pad.addStick(200, 150, 200, 'arcade');
+        this.stick = this.pad.addStick(300, 150, 200, 'arcade');
         // this.stick.alignTopLeft();
         this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
 
-        var buttonXBase = 400;
-        var buttonYBase = 150;
-        this.buttonA = this.pad.addButton(buttonXBase, buttonYBase, 'arcade', 'button1-up', 'button1-down');
+        var buttonYBase = 80;
+        this.buttonA = this.pad.addButton(80, buttonYBase, 'arcade', 'button1-up', 'button1-down');
 
-        this.buttonB = this.pad.addButton(buttonXBase + 115, buttonYBase - 70, 'arcade', 'button2-up', 'button2-down');
+        this.buttonB = this.pad.addButton(515, buttonYBase, 'arcade', 'button2-up', 'button2-down');
 
-        this.buttonC = this.pad.addButton(buttonXBase + 230, buttonYBase, 'arcade', 'button3-up', 'button3-down');
+        this.buttonLeft = this.pad.addButton(80, 200, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
     }
 
     update() {
