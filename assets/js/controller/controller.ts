@@ -1,5 +1,4 @@
-var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO, 'phaser-example');
-
+var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'phaser-example');
 declare namespace Phaser {
     class VirtualJoystick extends Phaser.Plugin {
         addStick : any;
@@ -49,23 +48,26 @@ class PhaserGame extends Phaser.State {
             Phaser.Keyboard.SPACEBAR
         ]);
 
+        var buttonSize = 32;
+        var padding = 60;
+
+        alert(game.world.width);
 
         this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
 
         this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
 
-        this.stick = this.pad.addStick(300, 150, 200, 'arcade');
-        // this.stick.alignTopLeft();
+        this.stick = this.pad.addStick(game.width / 2, game.height - padding - buttonSize, 200, 'arcade');
+
         this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
 
-        var buttonYBase = 80;
-        this.buttonA = this.pad.addButton(80, buttonYBase, 'arcade', 'button1-up', 'button1-down');
+        this.buttonA = this.pad.addButton(padding + buttonSize, padding + buttonSize, 'arcade', 'button1-up', 'button1-down');
 
-        this.buttonB = this.pad.addButton(515, buttonYBase, 'arcade', 'button2-up', 'button2-down');
+        this.buttonB = this.pad.addButton(game.width - padding - buttonSize, padding + buttonSize, 'arcade', 'button2-up', 'button2-down');
 
-        this.buttonLeft = this.pad.addButton(80, 200, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
+        this.buttonLeft = this.pad.addButton(padding + buttonSize, game.height - padding - buttonSize, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
 
-        this.buttonRight = this.pad.addButton(515, 200, 'arcade', 'buttonRight-up', 'buttonRight-down');
+        this.buttonRight = this.pad.addButton(game.width - padding - buttonSize, game.height - padding - buttonSize, 'arcade', 'buttonRight-up', 'buttonRight-down');
     }
 
     update() {
