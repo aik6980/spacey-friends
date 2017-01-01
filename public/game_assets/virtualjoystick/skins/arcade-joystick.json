@@ -25,6 +25,22 @@
 	"sourceSize": {"w":128,"h":128}
 },
 {
+  "filename": "buttonRight-down",
+  "frame": {"x":703,"y":142,"w":128,"h":128},
+  "rotated": false,
+  "trimmed": false,
+  "spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+  "sourceSize": {"w":128,"h":128}
+},
+{
+  "filename": "buttonRight-up",
+  "frame": {"x":703,"y":270,"w":128,"h":128},
+  "rotated": false,
+  "trimmed": false,
+  "spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+  "sourceSize": {"w":128,"h":128}
+},
+{
 	"filename": "button1-down",
 	"frame": {"x":2,"y":284,"w":132,"h":132},
 	"rotated": false,

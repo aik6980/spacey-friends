@@ -63,6 +63,8 @@ class PhaserGame extends Phaser.State {
         this.buttonB = this.pad.addButton(515, buttonYBase, 'arcade', 'button2-up', 'button2-down');
 
         this.buttonLeft = this.pad.addButton(80, 200, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
+
+        this.buttonLeft = this.pad.addButton(515, 200, 'arcade', 'buttonRight-up', 'buttonRight-down');
     }
 
     update() {
