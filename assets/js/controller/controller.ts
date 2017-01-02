@@ -20,6 +20,7 @@ class PhaserGame extends Phaser.State {
     buttonLeft : any;
     buttonRight : any;
     rotation : any;
+    background :Phaser.TileSprite;
 
     init() {
         this.game.renderer.renderSession.roundPixels = true;
@@ -44,7 +45,7 @@ class PhaserGame extends Phaser.State {
             Phaser.Keyboard.SPACEBAR
         ]);
 
-        this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
+        this.background = this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
 
         this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
 
@@ -79,6 +80,9 @@ class PhaserGame extends Phaser.State {
         var padding = 60;
 
         game.scale.setGameSize(window.innerWidth, window.innerHeight);
+
+        this.background.width = window.innerWidth;
+        this.background.height = window.innerHeight;
 
         this.buttonRight.posX = padding + buttonSize;
         this.buttonRight.posY = padding + buttonSize;
