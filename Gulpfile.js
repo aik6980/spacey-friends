@@ -13,6 +13,7 @@ var gulp = require("gulp");
 var ts = require("gulp-typescript");
 var sourcemaps = require("gulp-sourcemaps");
 var concat = require('gulp-concat');
+var sass = require('gulp-sass');
 
 // typescript project for game
 var ts_project_game 		= ts.createProject("tsconfig.game.json");
@@ -20,24 +21,27 @@ var ts_project_game_output 	= 'game.js';
 var ts_project_controller 	= ts.createProject("tsconfig.controller.json");
 var ts_project_controller_output = 'controller.js';
 
-gulp.task("default", ['typescript', 'js_move']);
+gulp.task("default", ['typescript', 'sass']);
 
 gulp.task("dev", function () {
-    gulp.watch('assets/js/**/*.*', ['default']);
+    gulp.watch('assets/js/**/*.*', ['typescript']);
+    gulp.watch('assets/sass/**/*.*', ['sass']);
 });
 
-gulp.task("babel", function () {
-    return gulp.src("assets/js/*.js")
-        .pipe(babel())
-        .pipe(gulp.dest("public/js"));
+gulp.task('sass', function () {
+    return gulp.src('assets/sass/**/*.scss')
+        .pipe(sass().on('error', sass.logError))
+        .pipe(gulp.dest('public/css'));
 });
+
+gulp.task("typescript", ['typescript_convert', 'js_move']);
 
 gulp.task("js_move", function () {
     return gulp.src("assets/js/vendor/**/*.js")
         .pipe(gulp.dest("public/js/vendor"));
 });
 
-gulp.task("typescript", function () {
+gulp.task("typescript_convert", function () {
 	var output_folder = "public/js";
 	var ts_result_game 		= ts_project_game.src()
 							.pipe(sourcemaps.init())

@@ -27,22 +27,23 @@ app.post('/', function(req, res) {
     }
 
     if (req.body.requestingFor === "newGame") {
-        console.log(req.body);
-        var game = {
-            'game_name': req.body.game_name,
-            'players': []
-        };
-        games[game_name] = {players: {}};
-        res.render('game.jade', {game_name: game_name});
-
+        if (games.hasOwnProperty(game_name)) {
+            res.render('index.jade', {error: "The game name '" + game_name + "' is in use.", new_game_name: game_name});
+        } else {
+            var game = {
+                'game_name': req.body.game_name,
+                'players': []
+            };
+            games[game_name] = {players: {}};
+            res.render('game.jade', {game_name: game_name});
+        }
     } else if (req.body.requestingFor === "controller") {
         if (!(games.hasOwnProperty(game_name))) {
-            res.render('index.jade', {error: "No game named " + game_name});
+            res.render('index.jade', {error: "No game named " + game_name, game_name: game_name, player_name: player_name});
         } else {
             if (games[game_name].players.hasOwnProperty(player_name)) {
-                res.render('index.jade', {error: "Name already in use!"});
+                res.render('index.jade', {error: "Name already in use!", game_name: game_name, player_name: player_name});
             } else {
-
                 games[game_name].players[player_name] = {};
                 res.render('controller.jade', {game_name: game_name, player_name: player_name});
             }
@@ -78,6 +79,22 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function() {
-        console.log("Client disconnected")
+        console.log("Client disconnected");
+        removePlayerFromGameFromSocket(socket);
     });
 });
+
+function removePlayerFromGameFromSocket(socket) {
+    for (var gameName in games) {
+        if (games[gameName].socket === socket) {
+            delete games[gameName];
+            return;
+        }
+        for (var playerName in games[gameName].players) {
+            if (games[gameName].players[playerName].socket === socket) {
+                delete games[gameName].players[playerName];
+                return;
+            }
+        }
+    }
+}
