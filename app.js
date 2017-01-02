@@ -86,11 +86,15 @@ io.on('connection', function (socket) {
 
 function removePlayerFromGameFromSocket(socket) {
     for(var gameName in games) {
+        if (games[gameName].socket === socket) {
+            delete games[gameName];
+            return;
+        }
         for(var playerName in games[gameName].players) {
             if (games[gameName].players[playerName].socket === socket) {
                 console.log(games[gameName].players);
                 delete games[gameName].players[playerName];
-                console.log(games[gameName].players);
+                return;
             }
         }
     }
