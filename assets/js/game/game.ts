@@ -1,3 +1,7 @@
+interface PlayerStat {
+    [key: string] : { curr_health: number, max_health: number};
+}
+
 class GameState extends Phaser.State {
 
     // control
@@ -98,6 +102,12 @@ class GameState extends Phaser.State {
             this.game.physics.arcade.overlap(ship.weapon.bullets, this.asteroid_manager.asteroid_group, 
                 this.on_bullet_hit_asteroid, null, this);
         }
+
+        // emit player stats
+        var player_stat : PlayerStat = {};
+        for (var ship of this.ships) {
+            player_stat[ship.name] = { curr_health: 87, max_health: 100 };
+        }
     }
 
     begin_spawn_asteroid() {
@@ -155,6 +165,8 @@ declare var game_name : string;
 socket.emit('gameConnect', {
     'game_name': game_name
 });
+
+socket.emit('update_player_stat');
 
 socket.on('instruction', function (data : any) {
     var shipIndex = searchArrayOfObjectsByProperty("name",data.player_name, game_state.ships);

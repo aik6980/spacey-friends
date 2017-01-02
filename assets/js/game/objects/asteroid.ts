@@ -7,13 +7,17 @@ module Objects {
             this.y = y;
 
             this.anchor.setTo(0.5);
-
+            this.game.physics.arcade.enable(this);
             // basic kill timer
             this.game.time.events.add(Phaser.Timer.SECOND * 30, this.kill, this);
         }
 
         update() {
             this.angle += 1;
+
+            if(this.inWorld) {
+                //this.body.collideWorldBounds = true;
+            }
         }
 
         can_spawn_small_asteroids() : boolean {

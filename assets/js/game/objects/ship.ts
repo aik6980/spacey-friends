@@ -5,7 +5,9 @@ module Objects {
         angular_accel_amount = 0.0;
         activate_weapon = false;
 
+        ship : Phaser.Sprite;
         weapon : Phaser.Weapon;
+        healthbar : Objects.HealthBar;
 
         constructor( game_state : Phaser.State ) {
             super(game_state.game, 0, 0, 'ship')
@@ -29,6 +31,14 @@ module Objects {
             this.weapon.fireRate = 1000; // fire rate in milliseconds
 
             this.weapon.trackSprite(this, 10, 0, true);
+
+            // add UI
+            this.healthbar = new Objects.HealthBar(this.game);
+            this.game.add.existing(this.healthbar);
+        }
+
+        update() {
+            this.healthbar.position.set(this.x, this.y);
         }
     }
 }

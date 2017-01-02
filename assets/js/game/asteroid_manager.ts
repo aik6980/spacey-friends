@@ -75,7 +75,7 @@ module Game {
         }
 
         spawn_asteroid() : Objects.Asteroid {
-            console.log('spawn an asteroid');
+            //console.log('spawn an asteroid');
             // pick a random area
             var area_id = this.game.rnd.integerInRange(0, 7);
             var frame_id = this.game.rnd.integerInRange(0, 3);
@@ -89,7 +89,6 @@ module Game {
             var x = this.spawn_area_list[area_id].ref_point.x + rnd_a.x;
             var y = this.spawn_area_list[area_id].ref_point.y + rnd_a.y;
             var asteroid = this.create_asteroid(x, y, frame_id);
-            game.physics.arcade.enable(asteroid);
             // calculate veloctiy
             var tx = this.spawn_area_list[area_id].target_area.ref_point.x + rnd_b.x;
             var ty = this.spawn_area_list[area_id].target_area.ref_point.y + rnd_b.y;
@@ -112,7 +111,6 @@ module Game {
             {
                 var frame_id = this.game.rnd.integerInRange(0, 3);
                 let sm = this.create_asteroid(a.x, a.y, frame_id);
-                game.physics.arcade.enable(sm);
 
                 body.velocity.clone(sm.body.velocity);
                 sm.body.velocity.rotate(0,0,init_angle[i],true);

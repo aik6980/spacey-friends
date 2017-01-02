@@ -9,7 +9,7 @@
             "url": "http://localhost:3000",
             "sourceMaps": true,
             "webRoot": "${workspaceRoot}",
-            "diagnosticLogging" : false
+            "diagnosticLogging" : true
         },
         {
             "name": "Attach to Chrome, with sourcemaps",
