@@ -40,6 +40,8 @@ class PhaserGame extends Phaser.State {
     }
 
     create() {
+        game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
+
         game.input.keyboard.addKeyCapture([
             Phaser.Keyboard.LEFT,
             Phaser.Keyboard.RIGHT,
@@ -47,11 +49,6 @@ class PhaserGame extends Phaser.State {
             Phaser.Keyboard.DOWN,
             Phaser.Keyboard.SPACEBAR
         ]);
-
-        var buttonSize = 32;
-        var padding = 60;
-
-        alert(game.world.width);
 
         this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
 
@@ -61,13 +58,15 @@ class PhaserGame extends Phaser.State {
 
         this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
 
-        this.buttonA = this.pad.addButton(padding + buttonSize, padding + buttonSize, 'arcade', 'button1-up', 'button1-down');
+        this.buttonA = this.pad.addButton(0, 0, 'arcade', 'button1-up', 'button1-down');
 
-        this.buttonB = this.pad.addButton(game.width - padding - buttonSize, padding + buttonSize, 'arcade', 'button2-up', 'button2-down');
+        this.buttonB = this.pad.addButton(0, 0, 'arcade', 'button2-up', 'button2-down');
 
-        this.buttonLeft = this.pad.addButton(padding + buttonSize, game.height - padding - buttonSize, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
+        this.buttonLeft = this.pad.addButton(0, 0, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
 
-        this.buttonRight = this.pad.addButton(game.width - padding - buttonSize, game.height - padding - buttonSize, 'arcade', 'buttonRight-up', 'buttonRight-down');
+        this.buttonRight = this.pad.addButton(0, 0, 'arcade', 'buttonRight-up', 'buttonRight-down');
+
+        this.resize();
     }
 
     update() {
@@ -85,6 +84,26 @@ class PhaserGame extends Phaser.State {
 
         socket.emit('controller', {game_name: game_name, thrust: this.thrust, activate_weapon: this.activate_weapon,
             rotation: this.rotation, player_name: player_name});
+    }
+
+    resize() {
+        var buttonSize = 32;
+        var padding = 60;
+
+        game.scale.setGameSize(window.innerWidth, window.innerHeight);
+
+        this.buttonRight.posX = padding + buttonSize;
+        this.buttonRight.posY = padding + buttonSize;
+
+
+        this.buttonB.posX = game.width - padding - buttonSize;
+        this.buttonB.posY = padding + buttonSize;
+
+        this.buttonLeft.posX = padding + buttonSize;
+        this.buttonLeft.posY = game.height - padding - buttonSize;
+
+        this.buttonA.posX = game.width - padding - buttonSize;
+        this.buttonA.posY = game.height - padding - buttonSize;
     }
 }
 
