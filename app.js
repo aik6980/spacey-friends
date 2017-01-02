@@ -37,7 +37,7 @@ app.post('/', function(req, res) {
 
     } else if (req.body.requestingFor === "controller") {
         if (!(games.hasOwnProperty(game_name))) {
-            res.render('index.jade', {error: "No game named " + game_name});
+            res.render('index.jade', {error: "No game named " + game_name, game_name: game_name, player_name: player_name});
         } else {
             if (games[game_name].players.hasOwnProperty(player_name)) {
                 res.render('index.jade', {error: "Name already in use!", game_name: game_name, player_name: player_name});
