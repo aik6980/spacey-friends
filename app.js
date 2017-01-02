@@ -40,9 +40,8 @@ app.post('/', function(req, res) {
             res.render('index.jade', {error: "No game named " + game_name});
         } else {
             if (games[game_name].players.hasOwnProperty(player_name)) {
-                res.render('index.jade', {error: "Name already in use!"});
+                res.render('index.jade', {error: "Name already in use!", game_name: game_name, player_name: player_name});
             } else {
-
                 games[game_name].players[player_name] = {};
                 res.render('controller.jade', {game_name: game_name, player_name: player_name});
             }
@@ -78,6 +77,19 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function() {
-        console.log("Client disconnected")
+        console.log("Client disconnected");
+        removePlayerFromGameFromSocket(socket);
     });
 });
+
+function removePlayerFromGameFromSocket(socket) {
+    for(var gameName in games) {
+        for(var playerName in games[gameName].players) {
+            if (games[gameName].players[playerName].socket === socket) {
+                console.log(games[gameName].players);
+                delete games[gameName].players[playerName];
+                console.log(games[gameName].players);
+            }
+        }
+    }
+}
