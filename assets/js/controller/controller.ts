@@ -7,12 +7,6 @@ declare namespace Phaser {
 
     namespace VirtualJoystick {
         var HORIZONTAL : any;
-        class Stick {
-            motionLock : any;
-            isDown : any;
-            forceX : any;
-        }
-
     }
 }
 
@@ -21,7 +15,6 @@ class PhaserGame extends Phaser.State {
     activate_weapon = false;
     thrust : boolean;
     pad : Phaser.VirtualJoystick;
-    stick : Phaser.VirtualJoystick.Stick;
     buttonA : any;
     buttonB : any;
     buttonLeft : any;
@@ -55,10 +48,6 @@ class PhaserGame extends Phaser.State {
 
         this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
 
-        this.stick = this.pad.addStick(game.width / 2, game.height - padding - buttonSize, 200, 'arcade');
-
-        this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
-
         this.buttonA = this.pad.addButton(0, 0, 'arcade', 'button1-up', 'button1-down');
 
         this.buttonB = this.pad.addButton(0, 0, 'arcade', 'button2-up', 'button2-down');
@@ -76,8 +65,6 @@ class PhaserGame extends Phaser.State {
         if (this.buttonRight.isDown || this.buttonLeft.isDown) {
             this.rotation += this.buttonRight.isDown;
             this.rotation -= this.buttonLeft.isDown;
-        } else if (this.stick.isDown) {
-            this.rotation = this.stick.forceX;
         }
 
         this.thrust = this.buttonA.isDown;
