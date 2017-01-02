@@ -1,5 +1,4 @@
-var game = new Phaser.Game(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio, Phaser.AUTO, 'phaser-example');
-
+var game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, 'phaser-example');
 declare namespace Phaser {
     class VirtualJoystick extends Phaser.Plugin {
         addStick : any;
@@ -8,12 +7,6 @@ declare namespace Phaser {
 
     namespace VirtualJoystick {
         var HORIZONTAL : any;
-        class Stick {
-            motionLock : any;
-            isDown : any;
-            forceX : any;
-        }
-
     }
 }
 
@@ -22,10 +15,12 @@ class PhaserGame extends Phaser.State {
     activate_weapon = false;
     thrust : boolean;
     pad : Phaser.VirtualJoystick;
-    stick : Phaser.VirtualJoystick.Stick;
     buttonA : any;
     buttonB : any;
-    buttonC : any;
+    buttonLeft : any;
+    buttonRight : any;
+    rotation : any;
+    background :Phaser.TileSprite;
 
     init() {
         this.game.renderer.renderSession.roundPixels = true;
@@ -40,6 +35,8 @@ class PhaserGame extends Phaser.State {
     }
 
     create() {
+        game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
+
         game.input.keyboard.addKeyCapture([
             Phaser.Keyboard.LEFT,
             Phaser.Keyboard.RIGHT,
@@ -48,29 +45,27 @@ class PhaserGame extends Phaser.State {
             Phaser.Keyboard.SPACEBAR
         ]);
 
-
-        this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
+        this.background = this.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
 
         this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
 
-        this.stick = this.pad.addStick(200, 150, 200, 'arcade');
-        // this.stick.alignTopLeft();
-        this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
+        this.buttonA = this.pad.addButton(0, 0, 'arcade', 'button1-up', 'button1-down');
 
-        var buttonXBase = 400;
-        var buttonYBase = 150;
-        this.buttonA = this.pad.addButton(buttonXBase, buttonYBase, 'arcade', 'button1-up', 'button1-down');
+        this.buttonB = this.pad.addButton(0, 0, 'arcade', 'button2-up', 'button2-down');
 
-        this.buttonB = this.pad.addButton(buttonXBase + 115, buttonYBase - 70, 'arcade', 'button2-up', 'button2-down');
+        this.buttonLeft = this.pad.addButton(0, 0, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
 
-        this.buttonC = this.pad.addButton(buttonXBase + 230, buttonYBase, 'arcade', 'button3-up', 'button3-down');
+        this.buttonRight = this.pad.addButton(0, 0, 'arcade', 'buttonRight-up', 'buttonRight-down');
+
+        this.resize();
     }
 
     update() {
-        if (this.stick.isDown) {
-            this.rotation = this.stick.forceX;
-        } else {
-            this.rotation = 0;
+
+        this.rotation = 0;
+        if (this.buttonRight.isDown || this.buttonLeft.isDown) {
+            this.rotation += this.buttonRight.isDown;
+            this.rotation -= this.buttonLeft.isDown;
         }
 
         this.thrust = this.buttonA.isDown;
@@ -78,6 +73,29 @@ class PhaserGame extends Phaser.State {
 
         socket.emit('controller', {game_name: game_name, thrust: this.thrust, activate_weapon: this.activate_weapon,
             rotation: this.rotation, player_name: player_name});
+    }
+
+    resize() {
+        var buttonSize = 32;
+        var padding = 60;
+
+        game.scale.setGameSize(window.innerWidth, window.innerHeight);
+
+        this.background.width = window.innerWidth;
+        this.background.height = window.innerHeight;
+
+        this.buttonRight.posX = padding + buttonSize;
+        this.buttonRight.posY = padding + buttonSize;
+
+
+        this.buttonB.posX = game.width - padding - buttonSize;
+        this.buttonB.posY = padding + buttonSize;
+
+        this.buttonLeft.posX = padding + buttonSize;
+        this.buttonLeft.posY = game.height - padding - buttonSize;
+
+        this.buttonA.posX = game.width - padding - buttonSize;
+        this.buttonA.posY = game.height - padding - buttonSize;
     }
 }
 
