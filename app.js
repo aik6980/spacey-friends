@@ -27,14 +27,16 @@ app.post('/', function(req, res) {
     }
 
     if (req.body.requestingFor === "newGame") {
-        console.log(req.body);
-        var game = {
-            'game_name': req.body.game_name,
-            'players': []
-        };
-        games[game_name] = {players: {}};
-        res.render('game.jade', {game_name: game_name});
-
+        if (games.hasOwnProperty(game_name)) {
+            res.render('index.jade', {error: "The game name '" + game_name + "' is in use.", new_game_name: game_name});
+        } else {
+            var game = {
+                'game_name': req.body.game_name,
+                'players': []
+            };
+            games[game_name] = {players: {}};
+            res.render('game.jade', {game_name: game_name});
+        }
     } else if (req.body.requestingFor === "controller") {
         if (!(games.hasOwnProperty(game_name))) {
             res.render('index.jade', {error: "No game named " + game_name, game_name: game_name, player_name: player_name});
