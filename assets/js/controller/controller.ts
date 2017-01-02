@@ -22,6 +22,9 @@ class PhaserGame extends Phaser.State {
     rotation : any;
     background :Phaser.TileSprite;
 
+    // health bar
+    healthbar : Objects.HealthBar;
+
     init() {
         this.game.renderer.renderSession.roundPixels = true;
         //this.physics.startSystem(Phaser.Physics.ARCADE);
@@ -56,6 +59,11 @@ class PhaserGame extends Phaser.State {
         this.buttonLeft = this.pad.addButton(0, 0, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
 
         this.buttonRight = this.pad.addButton(0, 0, 'arcade', 'buttonRight-up', 'buttonRight-down');
+
+        this.healthbar = new Objects.HealthBar(this.game);
+        this.healthbar.position.set(this.game.width/2, this.game.height/2);
+        this.healthbar.scale.set(this.game.width/2, this.game.height*0.1);
+        this.game.add.existing(this.healthbar);
 
         this.resize();
     }
@@ -99,7 +107,8 @@ class PhaserGame extends Phaser.State {
     }
 }
 
-game.state.add('Game', PhaserGame, true);
+let client_game_state = new PhaserGame();
+game.state.add('Game', client_game_state, true);
 
 var socket = io.connect();
 
@@ -113,4 +122,8 @@ socket.on('redirect', function (data) {
         alert("Game no longer exists :(");
         window.location.href = '/';
     }
+});
+
+socket.on('update_player_stats_client', function(data : Shared.PlayerStatMessage){
+    client_game_state.healthbar.set_curr_health_scale(data.curr_health/data.max_health);
 });

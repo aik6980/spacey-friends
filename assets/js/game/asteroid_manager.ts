@@ -9,6 +9,9 @@ module Game {
         game : Phaser.Game;
         asteroid_group : Phaser.Group;
 
+        static explosion_scale = 2.0;
+        static explosion_scale_sm = 1.0;
+
         // spawn System
         spawn_area_list : Array<SpawnPoint>;
 

@@ -7,7 +7,9 @@
     "target": "es5"
   },
   "include": [
-	"assets/js/controller/**/*",
-	"assets/js/tsd/**/*"
+	"assets/js/tsd/**/*",
+	"assets/js/typings/index.d.ts",
+	"assets/js/shared/**/*",
+	"assets/js/controller/**/*"
   ]
 }

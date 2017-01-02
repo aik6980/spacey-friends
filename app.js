@@ -69,6 +69,22 @@ io.on('connection', function (socket) {
         games[data.game_name].players[data.player_name].socket = socket;
         games[data.game_name].socket.emit('newShip', {player_name: data.player_name});
     });
+	
+	// send player_stats data to all players in the room
+	socket.on('update_player_stats', function (data) {
+		var game = games[data.game_name];
+		if(!game) return;
+		
+		for(var obj of data.player_stats){
+			if(game.hasOwnProperty('players') &&
+				game.players[obj.player_name] != null &&
+				game.players[obj.player_name].hasOwnProperty('socket')){
+				
+				var client_socket = game.players[obj.player_name].socket;
+				client_socket.volatile.emit('update_player_stats_client', obj);
+			}
+		}
+    });
 
     socket.on('controller', function (data) {
         if ( !(games.hasOwnProperty(data.game_name)) || !(games[data.game_name].hasOwnProperty("socket")) ) {

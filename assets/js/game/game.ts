@@ -1,7 +1,3 @@
-interface PlayerStat {
-    [key: string] : { curr_health: number, max_health: number};
-}
-
 class GameState extends Phaser.State {
 
     // control
@@ -101,12 +97,20 @@ class GameState extends Phaser.State {
         for (var ship of this.ships) {
             this.game.physics.arcade.overlap(ship.weapon.bullets, this.asteroid_manager.asteroid_group, 
                 this.on_bullet_hit_asteroid, null, this);
+
+            this.game.physics.arcade.overlap(ship, this.asteroid_manager.asteroid_group, 
+                this.on_ship_hit_asteroid, null, this);
         }
 
         // emit player stats
-        var player_stat : PlayerStat = {};
-        for (var ship of this.ships) {
-            player_stat[ship.name] = { curr_health: 87, max_health: 100 };
+        var player_stats = new Array<Shared.PlayerStatMessage>();
+        for (var i in this.ships) {
+            player_stats.push( { player_name: this.ships[i].name, curr_health: this.ships[i].health, 
+                max_health: this.ships[i].maxHealth } );
+        }
+
+        if(player_stats.length > 0) {
+            socket.emit('update_player_stats', { game_name: game_name, player_stats } );
         }
     }
 
@@ -114,15 +118,27 @@ class GameState extends Phaser.State {
         this.asteroid_manager.begin_spawn_asteroid();
     }
 
+    on_ship_hit_asteroid( a : Objects.Ship, b : Objects.Asteroid ) {
+        a.health -= a.maxHealth * 0.1;
+        if( a.health < 0 ) {
+            a.health = 0;
+        }
+
+        a.body.velocity = b.body.velocity;
+        b.kill();
+        // add explosion vfx
+        this.create_big_explosion_vfx(b, Game.AsteroidManager.explosion_scale);
+    }
+
     on_bullet_hit_asteroid( a : Phaser.Sprite, b : Objects.Asteroid ) {
         a.kill();
         // kill this asteroid
         b.kill();
-        let explosion_scale = 1; 
+        let explosion_scale = Game.AsteroidManager.explosion_scale_sm; 
         if(b.can_spawn_small_asteroids()){
             // spawn 2 more
             this.asteroid_manager.spawn_small_asteroids(b);
-            explosion_scale = 2;
+            explosion_scale = Game.AsteroidManager.explosion_scale;
         }
         // add explosion vfx
         this.create_big_explosion_vfx(b, explosion_scale);

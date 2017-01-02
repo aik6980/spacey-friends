@@ -8,6 +8,8 @@ module Objects {
 
             this.anchor.setTo(0.5);
             this.game.physics.arcade.enable(this);
+
+            this.body.mass = 1;
             // basic kill timer
             this.game.time.events.add(Phaser.Timer.SECOND * 30, this.kill, this);
         }

@@ -16,6 +16,9 @@ module Objects {
             this.scale.setTo(0.03);
             this.game.physics.arcade.enable(this);
 
+            this.body.mass = 1;
+            this.body.bounce = 0.9;
+            this.health = this.maxHealth;
             // Ship Rotation
             this.body.maxAngular = 300;
             this.body.angularDrag = 350;
