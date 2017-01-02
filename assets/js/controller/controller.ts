@@ -26,6 +26,7 @@ class PhaserGame extends Phaser.State {
     buttonB : any;
     buttonLeft : any;
     buttonRight : any;
+    rotation : any;
 
     init() {
         this.game.renderer.renderSession.roundPixels = true;
