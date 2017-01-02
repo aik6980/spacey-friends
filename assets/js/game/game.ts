@@ -91,6 +91,19 @@ class GameState extends Phaser.State {
 
 			ship.body.angularAcceleration += 300 * ship.angular_accel_amount;				
 			//console.log(ship.body.angularVelocity);
+
+            if (ship.position.x > this.game.width + ship.height) {
+                ship.position.x = 0 - ship.height;
+            } else if (ship.position.x < 0 - ship.height) {
+                ship.position.x = this.game.width + ship.height;
+            }
+
+            if (ship.position.y > this.game.height + ship.height) {
+                ship.position.y = 0 - ship.height;
+            } else if (ship.position.y < 0 - ship.height) {
+                ship.position.y = this.game.height + ship.height;
+            }
+
         }
 
         this.game.physics.arcade.collide(this.asteroid_manager.asteroid_group);
