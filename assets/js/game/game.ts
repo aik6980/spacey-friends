@@ -7,7 +7,9 @@ class GameState extends Phaser.State {
     background : Phaser.TileSprite;
     base : Phaser.Sprite;
 
-    ships : Array<Objects.Ship>;
+    ships : Phaser.Group;
+    color_shift_val = 0.0;
+
     ufo : Phaser.Sprite;
     asteroid_manager : Game.AsteroidManager;
 
@@ -51,7 +53,7 @@ class GameState extends Phaser.State {
         this.ufo.anchor.setTo(0.5);
         this.ufo.scale.setTo(0.1);
 
-        this.ships = [];
+        this.ships = this.game.add.group();
 		
 		this.asteroid_manager = new Game.AsteroidManager(this.game);
         this.asteroid_manager.init();
@@ -66,8 +68,8 @@ class GameState extends Phaser.State {
     }
 
     update() {
-        for (var i in this.ships) {
-            var ship = this.ships[i];
+        for (var i in this.ships.children) {
+            var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
 
             ship.body.acceleration.set(0);
             ship.body.angularAcceleration = 0;
@@ -112,7 +114,9 @@ class GameState extends Phaser.State {
         }
 
         this.game.physics.arcade.collide(this.asteroid_manager.asteroid_group);
-        for (var ship of this.ships) {
+        this.game.physics.arcade.collide(this.ships);
+        for (var i in this.ships.children) {
+            var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
             this.game.physics.arcade.overlap(ship.weapon.bullets, this.asteroid_manager.asteroid_group, 
                 this.on_bullet_hit_asteroid, null, this);
 
@@ -122,9 +126,10 @@ class GameState extends Phaser.State {
 
         // emit player stats
         var player_stats = new Array<Shared.PlayerStatMessage>();
-        for (var i in this.ships) {
-            player_stats.push( { player_name: this.ships[i].name, curr_health: this.ships[i].health, 
-                max_health: this.ships[i].maxHealth } );
+        for (var i in this.ships.children) {
+            var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
+            player_stats.push( { player_name: ship.name, curr_health: ship.health, 
+                max_health: ship.maxHealth } );
         }
 
         if(player_stats.length > 0) {
@@ -176,8 +181,11 @@ class GameState extends Phaser.State {
         ship.name = ship_name;
         ship.position.set(this.game.width/2, this.game.height/2 - 100);
         ship.angle = -90;
-        game.add.existing(ship);
-        this.ships.push(ship);
+
+        ship.set_texture_color_shift(this.color_shift_val);
+        Phaser.Math.wrap( this.color_shift_val += 0.1, 0.0, 1.0 );
+
+        this.ships.add(ship);
     }
 	
 	create_asteroid(x : number, y : number, id : number) {
@@ -203,11 +211,12 @@ socket.emit('gameConnect', {
 socket.emit('update_player_stat');
 
 socket.on('instruction', function (data : any) {
-    var shipIndex = searchArrayOfObjectsByProperty("name",data.player_name, game_state.ships);
+    var shipIndex = searchArrayOfObjectsByProperty("name",data.player_name, game_state.ships.children);
     if (typeof shipIndex === "number") {
-        game_state.ships[shipIndex].angular_accel_amount = data.rotation;
-        game_state.ships[shipIndex].thrust_amount = data.thrust;
-        game_state.ships[shipIndex].activate_weapon = data.activate_weapon;
+        var ship : Objects.Ship = game_state.ships.children[shipIndex] as Objects.Ship;
+        ship.angular_accel_amount = data.rotation;
+        ship.thrust_amount = data.thrust;
+        ship.activate_weapon = data.activate_weapon;
     } else {
         console.log("the name " + data.player_name + " does not exist :(")
     }

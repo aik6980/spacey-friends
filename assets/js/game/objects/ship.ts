@@ -9,6 +9,9 @@ module Objects {
         weapon : Phaser.Weapon;
         healthbar : Objects.HealthBar;
 
+        // unique texture for player's ship
+        bmd : Phaser.BitmapData;
+
         constructor( game_state : Phaser.State ) {
             super(game_state.game, 0, 0, 'ship')
 
@@ -36,12 +39,21 @@ module Objects {
             this.weapon.trackSprite(this, 10, 0, true);
 
             // add UI
-            this.healthbar = new Objects.HealthBar(this.game);
-            this.game.add.existing(this.healthbar);
+            //this.healthbar = new Objects.HealthBar(this.game);
+            //this.game.add.existing(this.healthbar);
+
+            this.bmd = game.make.bitmapData();
+            this.bmd.load('ship');
+        }
+
+        set_texture_color_shift( val : number ) {
+            // shift value can be between 0...1
+            this.bmd.shiftHSL(val);
+            this.setTexture(this.bmd.texture);
         }
 
         update() {
-            this.healthbar.position.set(this.x, this.y);
+            //this.healthbar.position.set(this.x, this.y);
         }
     }
 }
