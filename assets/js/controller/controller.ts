@@ -112,6 +112,9 @@ game.state.add('Game', client_game_state, true);
 
 var socket = io.connect();
 
+declare var player_name : string;
+declare var game_name : string;
+
 socket.emit('controlGame', {
     'game_name': game_name,
     'player_name': player_name
