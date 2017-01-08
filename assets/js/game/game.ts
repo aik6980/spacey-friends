@@ -187,6 +187,15 @@ class GameState extends Phaser.State {
 
         this.ships.add(ship);
     }
+
+    destroyShip(ship_name : string) {
+        for (var shipIndex in this.ships.children) {
+            var ship = this.ships.children[shipIndex] as Objects.Ship;
+            if (ship.name === ship_name) {
+                this.ships.remove(ship, true);
+            }
+        }
+    }
 	
 	create_asteroid(x : number, y : number, id : number) {
 		this.asteroid_manager.create_asteroid(x,y,id);
@@ -225,6 +234,10 @@ socket.on('instruction', function (data : any) {
 
 socket.on('newShip', function (data : any) {
     game_state.createShip(data.player_name);
+});
+
+socket.on('destroyShip', function (data : any) {
+    game_state.destroyShip(data.player_name);
 });
 
 function searchArrayOfObjectsByProperty(propertyToCheck : string, dataToFind : string, arrayToSearch : Array<any>) {
