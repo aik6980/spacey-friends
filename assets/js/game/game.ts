@@ -22,6 +22,7 @@ class GameState extends Phaser.State {
         this.load.image('ship', 'public/game_assets/images/ship.png');
         this.load.image('ufo', 'public/game_assets/images/ufo.png');
         this.load.image('bullet', 'public/game_assets/images/bullet.png');
+        this.game.load.image('smoke', 'public/game_assets/images/smoke.png'); 
 		
 		this.load.atlas('atlas', 'public/game_assets/images/asteroids.png', 'public/game_assets/images/asteroids.json');
         this.load.spritesheet('big_explosion', 'public/game_assets/images/big_explosion.png', 128, 128);

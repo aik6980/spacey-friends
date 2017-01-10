@@ -9,6 +9,8 @@ module Objects {
         weapon : Phaser.Weapon;
         healthbar : Objects.HealthBar;
 
+        smoke_vfx : Objects.SmokeEmitter;
+
         // unique texture for player's ship
         bmd : Phaser.BitmapData;
 
@@ -44,6 +46,11 @@ module Objects {
 
             this.bmd = game.make.bitmapData();
             this.bmd.load('ship');
+
+            this.smoke_vfx = new Objects.SmokeEmitter(this.game, 0, 0);
+            this.game.add.existing(this.smoke_vfx);
+            this.smoke_vfx.begin();
+            this.smoke_vfx.particleAnchor.set(0, -32);
         }
 
         set_texture_color_shift( val : number ) {
@@ -54,6 +61,8 @@ module Objects {
 
         update() {
             //this.healthbar.position.set(this.x, this.y);
+            this.smoke_vfx.position.set(this.x, this.y + 32);
+            this.smoke_vfx.rotation = this.rotation - Phaser.Math.degToRad(90);
         }
     }
 }
