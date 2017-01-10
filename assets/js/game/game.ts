@@ -12,6 +12,8 @@ class GameState extends Phaser.State {
 
     ufo : Phaser.Sprite;
     asteroid_manager : Game.AsteroidManager;
+    score = 0;
+    text: Phaser.Text;
 
     preload() {
         // tell the game to keep running, even the browser losing focus (so we can test locally)
@@ -52,6 +54,13 @@ class GameState extends Phaser.State {
         this.ufo = this.game.add.sprite(250, 50, 'ufo');
         this.ufo.anchor.setTo(0.5);
         this.ufo.scale.setTo(0.1);
+
+        var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
+        //  The Text is positioned at 0, 100
+        this.text = game.add.text(0, 0, "Score = " + this.score, style);
+        this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+        this.text.setTextBounds(0, 0, this.game.width, this.game.height * 0.1);
 
         this.ships = this.game.add.group();
 		
@@ -185,6 +194,8 @@ class GameState extends Phaser.State {
     }
 
     on_bullet_hit_asteroid( a : Phaser.Sprite, b : Objects.Asteroid ) {
+        this.score += 10;
+        this.text.setText("Score = " + this.score);
         a.kill();
         // kill this asteroid
         b.kill();
