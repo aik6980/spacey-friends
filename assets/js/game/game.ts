@@ -12,6 +12,8 @@ class GameState extends Phaser.State {
 
     ufo : Phaser.Sprite;
     asteroid_manager : Game.AsteroidManager;
+    score = 0;
+    text: Phaser.Text;
 
     preload() {
         // tell the game to keep running, even the browser losing focus (so we can test locally)
@@ -54,6 +56,13 @@ class GameState extends Phaser.State {
         this.ufo.anchor.setTo(0.5);
         this.ufo.scale.setTo(0.1);
 
+        var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
+        //  The Text is positioned at 0, 100
+        this.text = game.add.text(0, 0, "Score = " + this.score, style);
+        this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+        this.text.setTextBounds(0, 0, this.game.width, this.game.height * 0.1);
+
         this.ships = this.game.add.group();
 		
 		this.asteroid_manager = new Game.AsteroidManager(this.game);
@@ -71,9 +80,11 @@ class GameState extends Phaser.State {
     update() {
         for (var i in this.ships.children) {
             var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
-
             ship.body.acceleration.set(0);
             ship.body.angularAcceleration = 0;
+
+            if (ship.break_down) continue;
+
             //  Apply acceleration if the left/right arrow keys are held down
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
             {
@@ -100,6 +111,15 @@ class GameState extends Phaser.State {
 			ship.body.angularAcceleration += 300 * ship.angular_accel_amount;				
 			//console.log(ship.body.angularVelocity);
 
+
+        }
+
+        this.game.physics.arcade.collide(this.asteroid_manager.asteroid_group);
+        // this.game.physics.arcade.collide(this.ships);
+        for (var i in this.ships.children) {
+
+            var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
+
             if (ship.position.x > this.game.width + ship.height) {
                 ship.position.x = 0 - ship.height;
             } else if (ship.position.x < 0 - ship.height) {
@@ -112,18 +132,17 @@ class GameState extends Phaser.State {
                 ship.position.y = this.game.height + ship.height;
             }
 
-        }
 
-        this.game.physics.arcade.collide(this.asteroid_manager.asteroid_group);
-        this.game.physics.arcade.collide(this.ships);
-        for (var i in this.ships.children) {
-            var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
             this.game.physics.arcade.overlap(ship.weapon.bullets, this.asteroid_manager.asteroid_group, 
                 this.on_bullet_hit_asteroid, null, this);
 
             this.game.physics.arcade.overlap(ship, this.asteroid_manager.asteroid_group, 
                 this.on_ship_hit_asteroid, null, this);
         }
+
+        // detect ships overlapping each other
+        this.game.physics.arcade.overlap(this.ships, this.ships, this.on_ships_overlapped_event,
+            this.on_ships_overlapped, this);
 
         // emit player stats
         var player_stats = new Array<Shared.PlayerStatMessage>();
@@ -142,6 +161,27 @@ class GameState extends Phaser.State {
         this.asteroid_manager.begin_spawn_asteroid();
     }
 
+    on_ships_overlapped_event( a: Objects.Ship, b: Objects.Ship ) {
+        if (a.break_down && b.break_down) {
+            return;
+        }
+
+        if(a.break_down) {
+            a.health = a.maxHealth;
+            a.break_down = false;
+        }
+
+        if(b.break_down) {
+            b.health = b.maxHealth;
+            b.break_down = false;
+        }
+    }
+
+    test = true;
+    on_ships_overlapped( a: Objects.Ship, b: Objects.Ship ) {
+         return true;
+    }
+
     on_ship_hit_asteroid( a : Objects.Ship, b : Objects.Asteroid ) {
         a.health -= a.maxHealth * 0.1;
         if( a.health < 0 ) {
@@ -155,6 +195,8 @@ class GameState extends Phaser.State {
     }
 
     on_bullet_hit_asteroid( a : Phaser.Sprite, b : Objects.Asteroid ) {
+        this.score += 10;
+        this.text.setText("Score = " + this.score);
         a.kill();
         // kill this asteroid
         b.kill();
@@ -187,6 +229,15 @@ class GameState extends Phaser.State {
         Phaser.Math.wrap( this.color_shift_val += 0.1, 0.0, 1.0 );
 
         this.ships.add(ship);
+    }
+
+    destroyShip(ship_name : string) {
+        for (var shipIndex in this.ships.children) {
+            var ship = this.ships.children[shipIndex] as Objects.Ship;
+            if (ship.name === ship_name) {
+                this.ships.remove(ship, true);
+            }
+        }
     }
 	
 	create_asteroid(x : number, y : number, id : number) {
@@ -226,6 +277,10 @@ socket.on('instruction', function (data : any) {
 
 socket.on('newShip', function (data : any) {
     game_state.createShip(data.player_name);
+});
+
+socket.on('destroyShip', function (data : any) {
+    game_state.destroyShip(data.player_name);
 });
 
 function searchArrayOfObjectsByProperty(propertyToCheck : string, dataToFind : string, arrayToSearch : Array<any>) {

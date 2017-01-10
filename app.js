@@ -109,6 +109,7 @@ function removePlayerFromGameFromSocket(socket) {
         for (var playerName in games[gameName].players) {
             if (games[gameName].players[playerName].socket === socket) {
                 delete games[gameName].players[playerName];
+                games[gameName].socket.emit('destroyShip', {player_name: playerName});
                 return;
             }
         }

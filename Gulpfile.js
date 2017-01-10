@@ -23,7 +23,7 @@ var ts_project_controller_output = 'controller.js';
 
 gulp.task("default", ['typescript', 'sass']);
 
-gulp.task("dev", function () {
+gulp.task("dev", ['default'], function () {
     gulp.watch('assets/js/**/*.*', ['typescript']);
     gulp.watch('assets/sass/**/*.*', ['sass']);
 });
