@@ -70,9 +70,11 @@ class GameState extends Phaser.State {
     update() {
         for (var i in this.ships.children) {
             var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
-
             ship.body.acceleration.set(0);
             ship.body.angularAcceleration = 0;
+
+            if (ship.break_down) continue;
+
             //  Apply acceleration if the left/right arrow keys are held down
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
             {
@@ -99,6 +101,15 @@ class GameState extends Phaser.State {
 			ship.body.angularAcceleration += 300 * ship.angular_accel_amount;				
 			//console.log(ship.body.angularVelocity);
 
+
+        }
+
+        this.game.physics.arcade.collide(this.asteroid_manager.asteroid_group);
+        // this.game.physics.arcade.collide(this.ships);
+        for (var i in this.ships.children) {
+
+            var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
+
             if (ship.position.x > this.game.width + ship.height) {
                 ship.position.x = 0 - ship.height;
             } else if (ship.position.x < 0 - ship.height) {
@@ -111,18 +122,17 @@ class GameState extends Phaser.State {
                 ship.position.y = this.game.height + ship.height;
             }
 
-        }
 
-        this.game.physics.arcade.collide(this.asteroid_manager.asteroid_group);
-        this.game.physics.arcade.collide(this.ships);
-        for (var i in this.ships.children) {
-            var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
             this.game.physics.arcade.overlap(ship.weapon.bullets, this.asteroid_manager.asteroid_group, 
                 this.on_bullet_hit_asteroid, null, this);
 
             this.game.physics.arcade.overlap(ship, this.asteroid_manager.asteroid_group, 
                 this.on_ship_hit_asteroid, null, this);
         }
+
+        // detect ships overlapping each other
+        this.game.physics.arcade.overlap(this.ships, this.ships, this.on_ships_overlapped_event,
+            this.on_ships_overlapped, this);
 
         // emit player stats
         var player_stats = new Array<Shared.PlayerStatMessage>();
@@ -139,6 +149,27 @@ class GameState extends Phaser.State {
 
     begin_spawn_asteroid() {
         this.asteroid_manager.begin_spawn_asteroid();
+    }
+
+    on_ships_overlapped_event( a: Objects.Ship, b: Objects.Ship ) {
+        if (a.break_down && b.break_down) {
+            return;
+        }
+
+        if(a.break_down) {
+            a.health = a.maxHealth;
+            a.break_down = false;
+        }
+
+        if(b.break_down) {
+            b.health = b.maxHealth;
+            b.break_down = false;
+        }
+    }
+
+    test = true;
+    on_ships_overlapped( a: Objects.Ship, b: Objects.Ship ) {
+         return true;
     }
 
     on_ship_hit_asteroid( a : Objects.Ship, b : Objects.Asteroid ) {

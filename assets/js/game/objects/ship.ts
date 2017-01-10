@@ -12,8 +12,10 @@ module Objects {
         // unique texture for player's ship
         bmd : Phaser.BitmapData;
 
+        break_down = false;
+
         constructor( game_state : Phaser.State ) {
-            super(game_state.game, 0, 0, 'ship')
+            super(game_state.game, 0, 0, 'ship');
 
             this.anchor.setTo(0.5);
             this.scale.setTo(0.03);
@@ -54,6 +56,10 @@ module Objects {
 
         update() {
             //this.healthbar.position.set(this.x, this.y);
+
+            if(this.health <= 0.0) {
+                this.break_down = true;
+            }
         }
     }
 }
