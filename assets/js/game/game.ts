@@ -61,6 +61,7 @@ class GameState extends Phaser.State {
         this.text = game.add.text(0, 0, "Score = " + this.score, style);
         this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
         this.text.setTextBounds(0, 0, this.game.width, this.game.height * 0.1);
+        this.text.align = "center";
 
         this.ships = this.game.add.group();
 		
@@ -154,6 +155,28 @@ class GameState extends Phaser.State {
         if(player_stats.length > 0) {
             socket.emit('update_player_stats', { game_name: game_name, player_stats } );
         }
+
+        //Checks if all ships are dead
+        if (this.ships.children.length > 0) {
+            var dead = true;
+            for (var i in this.ships.children) {
+                var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
+                if (!(ship.break_down)) {
+                    dead = false;
+                }
+            }
+        }
+
+        if (dead) {
+            console.log("DEAAAAAADA");
+            socket.emit('gameOver', {
+                'game_name': game_name,
+                'score': this.score
+            });
+            this.text.setText("GAME OVER\nFinal Score = " + this.score);
+            window.location.href = '/';
+        }
+
     }
 
     begin_spawn_asteroid() {
@@ -182,7 +205,7 @@ class GameState extends Phaser.State {
     }
 
     on_ship_hit_asteroid( a : Objects.Ship, b : Objects.Asteroid ) {
-        a.health -= a.maxHealth * 0.1;
+        a.health -= a.maxHealth * 1;
         if( a.health < 0 ) {
             a.health = 0;
         }
