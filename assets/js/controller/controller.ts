@@ -122,7 +122,6 @@ socket.emit('controlGame', {
 
 socket.on('redirect', function (data) {
     if (data.location === "home") {
-        alert("Game no longer exists :(");
         window.location.href = '/';
     }
 });
