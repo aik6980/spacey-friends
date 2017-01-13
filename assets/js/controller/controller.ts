@@ -7,6 +7,11 @@ declare namespace Phaser {
 
     namespace VirtualJoystick {
         var HORIZONTAL : any;
+        class Stick {
+            motionLock : any;
+            isDown : any;
+            forceX : any;
+        }
     }
 }
 
@@ -15,12 +20,15 @@ class PhaserGame extends Phaser.State {
     activate_weapon = false;
     thrust : boolean;
     pad : Phaser.VirtualJoystick;
+    stick : Phaser.VirtualJoystick.Stick;
     buttonA : any;
     buttonB : any;
     buttonLeft : any;
     buttonRight : any;
     rotation : any;
     background :Phaser.TileSprite;
+
+    buttonPadding = 20;
 
     // health bar
     healthbar : Objects.HealthBar;
@@ -52,6 +60,10 @@ class PhaserGame extends Phaser.State {
 
         this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
 
+        this.stick = this.pad.addStick(100, 100, 200, 'arcade');
+
+        this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
+
         this.buttonA = this.pad.addButton(0, 0, 'arcade', 'button1-up', 'button1-down');
 
         this.buttonB = this.pad.addButton(0, 0, 'arcade', 'button2-up', 'button2-down');
@@ -74,6 +86,8 @@ class PhaserGame extends Phaser.State {
         if (this.buttonRight.isDown || this.buttonLeft.isDown) {
             this.rotation += this.buttonRight.isDown;
             this.rotation -= this.buttonLeft.isDown;
+        } else if (this.stick.isDown) {
+            this.rotation = this.stick.forceX;
         }
 
         this.thrust = this.buttonA.isDown;
@@ -92,8 +106,9 @@ class PhaserGame extends Phaser.State {
         this.background.width = window.innerWidth;
         this.background.height = window.innerHeight;
 
-        this.buttonRight.posX = padding + buttonSize;
-        this.buttonRight.posY = padding + buttonSize;
+        this.buttonRight.posX = this.buttonPadding;
+        this.buttonRight.posY = this.buttonPadding;
+        // this.buttonRight.scale(1.5);
 
 
         this.buttonB.posX = game.width - padding - buttonSize;
@@ -104,6 +119,9 @@ class PhaserGame extends Phaser.State {
 
         this.buttonA.posX = game.width - padding - buttonSize;
         this.buttonA.posY = game.height - padding - buttonSize;
+
+        this.stick.posX = game.width / 4;
+        this.stick.posY = game.height / 2;
     }
 }
 
@@ -122,7 +140,6 @@ socket.emit('controlGame', {
 
 socket.on('redirect', function (data) {
     if (data.location === "home") {
-        alert("Game no longer exists :(");
         window.location.href = '/';
     }
 });

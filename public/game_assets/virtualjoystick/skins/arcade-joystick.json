@@ -10,87 +10,87 @@
 },
 {
 	"filename": "buttonLeft-down",
-	"frame": {"x":573,"y":140,"w":132,"h":132},
+	"frame": {"x":573,"y":140,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-	"sourceSize": {"w":132,"h":132}
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
 },
 {
 	"filename": "buttonLeft-up",
-	"frame": {"x":573,"y":268,"w":132,"h":132},
+	"frame": {"x":573,"y":268,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-	"sourceSize": {"w":132,"h":132}
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
 },
 {
   "filename": "buttonRight-down",
-  "frame": {"x":701,"y":140,"w":132,"h":132},
+  "frame": {"x":701,"y":140,"w":128,"h":128},
   "rotated": false,
   "trimmed": false,
-  "spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-  "sourceSize": {"w":132,"h":132}
+  "spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+  "sourceSize": {"w":128,"h":128}
 },
 {
   "filename": "buttonRight-up",
-  "frame": {"x":701,"y":268,"w":132,"h":132},
+  "frame": {"x":701,"y":268,"w":128,"h":128},
   "rotated": false,
   "trimmed": false,
-  "spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-  "sourceSize": {"w":132,"h":132}
+  "spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+  "sourceSize": {"w":128,"h":128}
 },
 {
 	"filename": "button1-down",
-	"frame": {"x":2,"y":284,"w":132,"h":132},
+	"frame": {"x":2,"y":284,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-	"sourceSize": {"w":132,"h":132}
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
 },
 {
 	"filename": "button1-up",
-	"frame": {"x":136,"y":284,"w":132,"h":132},
+	"frame": {"x":136,"y":284,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-	"sourceSize": {"w":132,"h":132}
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
 },
 {
 	"filename": "button2-down",
-	"frame": {"x":270,"y":284,"w":132,"h":132},
+	"frame": {"x":270,"y":284,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-	"sourceSize": {"w":132,"h":132}
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
 },
 {
 	"filename": "button2-up",
-	"frame": {"x":284,"y":138,"w":132,"h":132},
+	"frame": {"x":284,"y":138,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-	"sourceSize": {"w":132,"h":132}
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
 },
 {
 	"filename": "button3-down",
-	"frame": {"x":418,"y":138,"w":132,"h":132},
+	"frame": {"x":418,"y":138,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-	"sourceSize": {"w":132,"h":132}
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
 },
 {
 	"filename": "button3-up",
-	"frame": {"x":404,"y":272,"w":132,"h":132},
+	"frame": {"x":404,"y":272,"w":128,"h":128},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":132,"h":132},
-	"sourceSize": {"w":132,"h":132}
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
 },
 {
 	"filename": "stick",
-	"frame": {"x":404,"y":2,"w":134,"h":134},
+	"frame": {"x":402,"y":0,"w":134,"h":134},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":134,"h":134},
