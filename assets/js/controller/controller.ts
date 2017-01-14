@@ -30,7 +30,7 @@ class PhaserGame extends Phaser.State {
     rotation : any;
     background :Phaser.TileSprite;
 
-    buttonPadding = 60;
+    button_size = 128;
 
     // health bar
     healthbar : Objects.HealthBar;
@@ -62,9 +62,9 @@ class PhaserGame extends Phaser.State {
 
         this.pad = this.game.plugins.add(Phaser.VirtualJoystick);
 
-        this.stick = this.pad.addStick(100, 100, 200, 'arcade');
+        //this.stick = this.pad.addStick(100, 100, 200, 'arcade');
 
-        this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
+        //this.stick.motionLock = Phaser.VirtualJoystick.HORIZONTAL;
 
         this.buttonA = this.pad.addButton(0, 0, 'arcade', 'button1-up', 'button1-down');
 
@@ -73,6 +73,7 @@ class PhaserGame extends Phaser.State {
         this.buttonLeft = this.pad.addButton(0, 0, 'arcade', 'buttonLeft-up', 'buttonLeft-down');
 
         this.buttonRight = this.pad.addButton(0, 0, 'arcade', 'buttonRight-up', 'buttonRight-down');
+        this.buttonRight.alignBottomLeft();
 
         this.healthbar = new Objects.HealthBar(this.game);
         this.healthbar.position.set(this.game.width/2, this.game.height/2);
@@ -88,9 +89,10 @@ class PhaserGame extends Phaser.State {
         if (this.buttonRight.isDown || this.buttonLeft.isDown) {
             this.rotation += this.buttonRight.isDown;
             this.rotation -= this.buttonLeft.isDown;
-        } else if (this.stick.isDown) {
-            this.rotation = this.stick.forceX;
-        }
+        } 
+        //else if (this.stick.isDown) {
+        //    this.rotation = this.stick.forceX;
+        //}
 
         this.thrust = this.buttonA.isDown;
         this.activate_weapon = this.buttonB.isDown;
@@ -100,30 +102,32 @@ class PhaserGame extends Phaser.State {
     }
 
     resize() {
-        var buttonSize = 32;
-        var padding = 60;
+        var padding = this.button_size * 0.1;
 
         game.scale.setGameSize(window.innerWidth, window.innerHeight);
 
         this.background.width = window.innerWidth;
         this.background.height = window.innerHeight;
 
-        this.buttonRight.posX = this.buttonPadding + buttonSize;
-        this.buttonRight.posY = this.buttonPadding + buttonSize;
-        // this.buttonRight.scale(1.5);
+        //this.buttonLeft.alignTopLeft();
+        //this.buttonRight.alignBottomLeft();
+        
+        
+        this.buttonLeft.posX = this.button_size/2 + padding;
+        this.buttonLeft.posY = game.height - (padding + this.button_size/2);
+        this.buttonRight.posX = this.button_size/2 + padding;
+        this.buttonRight.posY = padding + this.button_size/2;
+        //this.buttonRight.scale(1.5);
 
 
-        this.buttonB.posX = game.width - padding - buttonSize;
-        this.buttonB.posY = padding + buttonSize;
+        this.buttonB.posX = game.width - this.buttonLeft.posX;
+        this.buttonB.posY = this.buttonLeft.posY;
 
-        this.buttonLeft.posX = padding + buttonSize;
-        this.buttonLeft.posY = game.height - padding - buttonSize;
+        this.buttonA.posX = game.width - this.buttonRight.posX;
+        this.buttonA.posY = this.buttonRight.posY;
 
-        this.buttonA.posX = game.width - padding - buttonSize;
-        this.buttonA.posY = game.height - padding - buttonSize;
-
-        this.stick.posX = game.width / 8;
-        this.stick.posY = game.height / 2;
+        //this.stick.posX = game.width / 8;
+        //this.stick.posY = game.height / 2;
 
         this.healthbar.position.set(this.game.width/2, this.game.height/2);
         this.healthbar.scale.set(this.game.width/2, this.game.height*0.1);

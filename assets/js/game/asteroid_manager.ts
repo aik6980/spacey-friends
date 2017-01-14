@@ -73,7 +73,7 @@ module Game {
 
         begin_spawn_asteroid() {
             this.spawn_asteroid();
-            var spawn_timer = 2;
+            var spawn_timer = 4;
             this.game.time.events.loop(Phaser.Timer.SECOND * spawn_timer, this.spawn_asteroid, this);
         }
 
