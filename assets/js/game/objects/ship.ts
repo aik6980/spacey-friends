@@ -36,9 +36,12 @@ module Objects {
 
             // add weapon
             this.weapon = this.game.add.weapon(10, 'bullet');
+            this.weapon.bulletClass = Objects.Rocket;
+            this.weapon.createBullets(10, "bullet");
             this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
             this.weapon.bulletSpeed = 250;
             this.weapon.fireRate = 1000; // fire rate in milliseconds
+            this.weapon.onFire.add(this.on_rocket_fire, this);
 
             this.weapon.trackSprite(this, 10, 0, true);
 
@@ -51,8 +54,17 @@ module Objects {
 
             this.smoke_vfx = new Objects.SmokeEmitter(this.game, 0, 0);
             this.game.add.existing(this.smoke_vfx);
-            this.smoke_vfx.begin();
-            this.smoke_vfx.particleAnchor.set(0, -32);
+            
+            // emiting thruster
+            //this.smoke_vfx.emitY = -32;
+        }
+
+        destroy() {
+            this.smoke_vfx.destroy();
+        }
+
+        on_rocket_fire( a: Objects.Rocket, b:Phaser.Weapon ) {
+            a.owner = this;
         }
 
         set_texture_color_shift( val : number ) {
@@ -66,9 +78,14 @@ module Objects {
 
             if(this.health <= 0.0) {
                 this.break_down = true;
+                this.smoke_vfx.on = true;
+                this.smoke_vfx.begin();
             }
-            this.smoke_vfx.position.set(this.x, this.y + 32);
-            this.smoke_vfx.rotation = this.rotation - Phaser.Math.degToRad(90);
+            else {
+                this.smoke_vfx.on = false;
+            }
+            this.smoke_vfx.position.set(this.x, this.y);
+            //this.smoke_vfx.rotation = this.rotation - Phaser.Math.degToRad(90);
         }
     }
 }

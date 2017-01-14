@@ -11,6 +11,8 @@ declare namespace Phaser {
             motionLock : any;
             isDown : any;
             forceX : any;
+            posX : any;
+            posY : any;
         }
     }
 }
@@ -28,7 +30,7 @@ class PhaserGame extends Phaser.State {
     rotation : any;
     background :Phaser.TileSprite;
 
-    buttonPadding = 20;
+    buttonPadding = 60;
 
     // health bar
     healthbar : Objects.HealthBar;
@@ -106,8 +108,8 @@ class PhaserGame extends Phaser.State {
         this.background.width = window.innerWidth;
         this.background.height = window.innerHeight;
 
-        this.buttonRight.posX = this.buttonPadding;
-        this.buttonRight.posY = this.buttonPadding;
+        this.buttonRight.posX = this.buttonPadding + buttonSize;
+        this.buttonRight.posY = this.buttonPadding + buttonSize;
         // this.buttonRight.scale(1.5);
 
 
@@ -120,8 +122,11 @@ class PhaserGame extends Phaser.State {
         this.buttonA.posX = game.width - padding - buttonSize;
         this.buttonA.posY = game.height - padding - buttonSize;
 
-        this.stick.posX = game.width / 4;
+        this.stick.posX = game.width / 8;
         this.stick.posY = game.height / 2;
+
+        this.healthbar.position.set(this.game.width/2, this.game.height/2);
+        this.healthbar.scale.set(this.game.width/2, this.game.height*0.1);
     }
 }
 

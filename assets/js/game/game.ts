@@ -15,6 +15,8 @@ class GameState extends Phaser.State {
     score = 0;
     text: Phaser.Text;
 
+    break_down_score_timer : Phaser.Timer;
+
     preload() {
         // tell the game to keep running, even the browser losing focus (so we can test locally)
         game.stage.disableVisibilityChange = true;
@@ -73,7 +75,10 @@ class GameState extends Phaser.State {
 		//this.create_asteroid(100,150,1);
 		//this.create_asteroid(100,400,0);
          this.key_space_bar.onDown.add(this.begin_spawn_asteroid, this);
-		
+
+         this.break_down_score_timer = this.game.time.create(false);
+         this.break_down_score_timer.loop(1000, this.on_break_down_timer_completed, this);
+
         // DUBUGGING
         // this.text = this.game.add.text(10, 10, 'here is a colored line of text',  { font: "32px Arial", fill: '#FF0000' });   
     }
@@ -115,8 +120,10 @@ class GameState extends Phaser.State {
 
         }
 
-        this.game.physics.arcade.collide(this.asteroid_manager.asteroid_group);
+        //this.game.physics.arcade.collide(this.asteroid_manager.asteroid_group);
         // this.game.physics.arcade.collide(this.ships);
+
+        var any_break_down = false;
         for (var i in this.ships.children) {
 
             var ship : Objects.Ship = this.ships.children[i] as Objects.Ship;
@@ -139,11 +146,30 @@ class GameState extends Phaser.State {
 
             this.game.physics.arcade.overlap(ship, this.asteroid_manager.asteroid_group, 
                 this.on_ship_hit_asteroid, null, this);
+
+            this.game.physics.arcade.overlap(ship.weapon.bullets, this.ships, 
+                this.on_bullet_hit_ship, this.process_bullet_hit_ship, this);
+
+            if(ship.break_down) {
+                console.log('timer');
+                any_break_down = true;
+                if(!this.break_down_score_timer.running) {
+                    this.break_down_score_timer.start();
+                }
+            }
         }
 
+        if(!any_break_down && this.break_down_score_timer.running) {
+            this.break_down_score_timer.stop(false);
+        }
+
+        //if(this.ships.checkAll(['this.break_down'], false)) {
+        //    this.break_down_score_timer.stop();
+        //}
+
         // detect ships overlapping each other
-        this.game.physics.arcade.overlap(this.ships, this.ships, this.on_ships_overlapped_event,
-            this.on_ships_overlapped, this);
+        this.game.physics.arcade.overlap(this.ships, this.ships, this.on_ships_overlapped,
+            this.process_ships_overlapped, this);
 
         // emit player stats
         var player_stats = new Array<Shared.PlayerStatMessage>();
@@ -168,6 +194,9 @@ class GameState extends Phaser.State {
             }
         }
 
+        // update UI
+        this.text.setText("Score = " + this.score);
+
         if (dead) {
             console.log("DEAAAAAADA");
             socket.emit('gameOver', {
@@ -180,11 +209,31 @@ class GameState extends Phaser.State {
 
     }
 
+    on_break_down_timer_completed( a:Phaser.Timer )
+    {
+        this.score -= 5;
+    }
+
     begin_spawn_asteroid() {
         this.asteroid_manager.begin_spawn_asteroid();
     }
 
-    on_ships_overlapped_event( a: Objects.Ship, b: Objects.Ship ) {
+    on_bullet_hit_ship( a: Objects.Rocket, b: Objects.Ship ) {
+        a.kill();
+        b.body.velocity = a.body.velocity;
+        this.create_big_explosion_vfx(b, Game.AsteroidManager.explosion_scale);
+    }
+
+    process_bullet_hit_ship( a: Objects.Rocket, b: Objects.Ship ) {
+        if(a.owner != b) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    on_ships_overlapped( a: Objects.Ship, b: Objects.Ship ) {
         if (a.break_down && b.break_down) {
             return;
         }
@@ -200,13 +249,20 @@ class GameState extends Phaser.State {
         }
     }
 
-    test = true;
-    on_ships_overlapped( a: Objects.Ship, b: Objects.Ship ) {
+    process_ships_overlapped( a: Objects.Ship, b: Objects.Ship ) {
          return true;
     }
 
     on_ship_hit_asteroid( a : Objects.Ship, b : Objects.Asteroid ) {
-        a.health -= a.maxHealth * 1;
+        
+        // small asteroid hurt less
+        var damage_ratio = 0.25;
+        if(b.can_spawn_small_asteroids()) {
+            // big asteroid hurt more
+            damage_ratio = 0.5;
+        }
+        
+        a.health -= a.maxHealth * damage_ratio;
         if( a.health < 0 ) {
             a.health = 0;
         }
@@ -219,7 +275,6 @@ class GameState extends Phaser.State {
 
     on_bullet_hit_asteroid( a : Phaser.Sprite, b : Objects.Asteroid ) {
         this.score += 10;
-        this.text.setText("Score = " + this.score);
         a.kill();
         // kill this asteroid
         b.kill();

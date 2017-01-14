@@ -8,17 +8,19 @@ namespace Objects {
             //    this.game.load.image('smoke', 'public/game_assets/images/smoke.png');
             //}
 
-            this.scale.set(0.25);
+            this.scale.set(0.5);
 
             this.makeParticles('smoke');
-            this.setAlpha(1.0, 0.1, Phaser.Timer.SECOND);
-            this.setXSpeed(-0.1, -0.1);
-            this.setYSpeed(-0.1, -0.1);
+            this.setAlpha(0.1, 1.0, Phaser.Timer.SECOND);
+            this.setScale(0.1, 1, 0.1, 1, 6000, Phaser.Easing.Quintic.Out);
+            this.setXSpeed(-50, 50);
+            this.setYSpeed(-10, -15);
+            this.gravity = -25;
         }
 
         begin()
         {
-            this.flow(2000, 500);
+            this.flow(2000, 200);
         }
     }
 }
