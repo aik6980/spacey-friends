@@ -199,10 +199,10 @@ class GameState extends Phaser.State {
 
         if (dead) {
             console.log("DEAAAAAADA");
-            socket.emit('gameOver', {
-                'game_name': game_name,
-                'score': this.score
-            });
+            // socket.emit('gameOver', {
+            //     'game_name': game_name,
+            //     'score': this.score
+            // });
             this.text.setText("GAME OVER\nFinal Score = " + this.score);
             window.location.href = '/';
         }
