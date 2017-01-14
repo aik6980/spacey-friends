@@ -28,3 +28,7 @@ For development it is then advised to run the following as a seperate process wh
 ```sh
 $ gulp dev
 ```
+
+### Programming resources
+http://sbcgamesdev.blogspot.co.uk/2016/01/phaser-tutorial-using-phaser-signals.html  
+
